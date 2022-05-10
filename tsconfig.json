@@ -1,0 +1,8 @@
+{
+  "include": ["src/*", "src/services/api"],
+  "compilerOptions": {
+    "target": "es5",
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true
+  }
+}
