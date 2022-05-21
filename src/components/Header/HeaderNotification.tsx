@@ -12,7 +12,7 @@ const IconNotificationStyled = styled(RiUserAddLine)`
 `
 
 export const HeaderNotification = () => {
-  const { signOut } = useAuth()
+  const { handleSignOut } = useAuth()
 
   return (
     <HStack
@@ -44,7 +44,7 @@ export const HeaderNotification = () => {
         variant="unstyled"
         icon={<IconLogOutStyled />}
         fontSize="20"
-        onClick={signOut}
+        onClick={handleSignOut}
       />
     </HStack>
   )

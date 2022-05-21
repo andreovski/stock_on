@@ -14,11 +14,7 @@ import {
 
 import { useAuth } from "../../context/AuthContext"
 
-import {
-  useMutationSignInWithCredentials,
-  useQueryAccountUsers,
-  // useQueryGetDocumentById,
-} from "../../services/api"
+import { useMutationSignInWithCredentials } from "../../services/api"
 
 import { Input } from "../../components/Form/Input"
 import { FcGoogle } from "react-icons/fc"
@@ -35,18 +31,17 @@ export const SignIn = () => {
 
   const navigate = useNavigate()
 
-  const { mutate: signIn, isLoading } = useMutationSignInWithCredentials(
-    {},
-    {
-      onError: ({ error }: any) => setError(error.message),
-      onSuccess: (data) => {
-        signInWithCredetials(data)
+  const { mutate: signIn, isLoading } = useMutationSignInWithCredentials({
+    onError: (data: any) => {
+      setError(data)
+    },
+    onSuccess: () => {
+      signInWithCredetials()
 
-        setError(null)
-        navigate("/dashboard")
-      },
-    }
-  )
+      setError(null)
+      navigate("/dashboard")
+    },
+  })
 
   const onSubmit = useCallback(
     (e) => {

@@ -1,19 +1,23 @@
-export const getRefreshToken = () => {
-  return localStorage.getItem("@stock.on/refreshToken")
+import { supabase } from "../services/supabaseClient"
+
+export const validateUser = () => {
+  return supabase.auth.user()
 }
 
-export const removeRefreshToken = () => {
-  localStorage.removeItem("@stock.on/refreshToken")
-  localStorage.removeItem("@stock.on/auth")
+export const signOut = () => {
+  const { access_token } = supabase.auth.session()
+
+  return supabase.auth.api.signOut(access_token).then(() => {
+    localStorage.removeItem("supabase.auth.token")
+  })
 }
 
-export const validateRefreshToke = ({ refreshToken }) => {
-  // if (!refreshToken) return
+export const signIn = async ({ email, password }) => {
+  const data = await supabase.auth.signIn({ email, password })
 
-  // return secureToken.post("token", {
-  //   refresh_token: refreshToken,
-  //   grant_type: "refresh_token",
-  // })
+  if (data.error) {
+    throw data.error
+  }
 
-  return null
+  return data
 }

@@ -3,12 +3,12 @@ import axios from "axios"
 import { AxiosInstance, AxiosRequestConfig } from "axios"
 import {
   MutateOptions,
-  QueryOptions,
   useMutation,
   UseMutationResult,
   useQuery,
   UseQueryResult,
 } from "react-query"
+import { signIn } from "../../providers/auth"
 
 interface IMutateFunction {
   api: AxiosInstance
@@ -51,6 +51,10 @@ const requestFn = async (options, url, pathParams, queryParams) => {
 
   try {
     const { data } = await api(url, {
+      params: {
+        select: "*",
+        ...queryParams,
+      },
       ...options,
     })
 
@@ -105,6 +109,11 @@ export const useQueryAccountUsers = (
     { ...config }
   )
 
+export const useMutationSignInWithCredentials = (
+  config?: MutateOptions<any, any>
+): UseMutationResult =>
+  useMutation("SignIn", (body: any) => signIn(body), { ...config })
+
 export const useMutationSignUpWithCredentials = (
   queryParams,
   config?: MutateOptions<void, void>
@@ -120,20 +129,14 @@ export const useMutationSignUpWithCredentials = (
     { ...config }
   )
 
-export const useMutationSignInWithCredentials = (
-  queryParams,
-  config?: MutateOptions<void, void>
-): UseMutationResult =>
-  useMutation(
-    (body?: any) =>
-      mutateFn({
-        api: auth,
-        url: "token",
-        queryParams: { ...queryParams, grant_type: "password" },
-        body,
-      }),
-    { ...config }
-  )
+export const useQueryAccountGetProfileById = (
+  queryParams?,
+  config?,
+  options?
+): UseQueryResult<any> =>
+  useQuery(`/profile`, () => queryFn(options)(`/profiles`, queryParams), {
+    ...config,
+  })
 
 // export const useMutationSignUp = (
 //   queryParams,

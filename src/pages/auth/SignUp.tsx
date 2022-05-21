@@ -24,7 +24,6 @@ import { InputForm } from "../../components/Form/InputForm"
 import * as Yup from "yup"
 import { RiArrowLeftLine } from "react-icons/ri"
 import { SectionTitle } from "../../components/SectionTitle"
-import { useAuth } from "../../context/AuthContext"
 import { useMutationSignUpWithCredentials } from "../../services/api"
 
 export const SignUp: React.FC = () => {
