@@ -3,7 +3,7 @@ import { supabase } from "../services/supabaseClient"
 export const validateUser = async () => {
   const data = localStorage.getItem("@stock.on/auth")
 
-  if (!data) return null
+  if (!data) throw new Error("not logged")
 
   const dataFormatted = JSON.parse(data)
 

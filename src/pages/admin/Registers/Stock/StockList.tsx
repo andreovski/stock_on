@@ -5,7 +5,6 @@ import {
   Flex,
   Heading,
   Icon,
-  Spinner,
   Table,
   Tbody,
   Td,
@@ -34,7 +33,7 @@ export const StockList = () => {
 const StockListComp = () => {
   const navigate = useNavigate()
 
-  const { data = [], isLoading } = useQueryStockGetItems()
+  const { data = [] } = useQueryStockGetItems()
 
   const isWideVersion = useBreakpointValue({
     base: false,
