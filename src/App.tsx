@@ -2,11 +2,14 @@ import { Suspense, useMemo } from "react"
 import { useAuth } from "./context/AuthContext"
 import AppRoutes from "./routes/AppRoutes"
 import AuthRoutes from "./routes/AuthRoutes"
+import { useReactQueryConfig } from "./services/reactQueryConfig"
 
 import { SpinnerFull } from "./components/SpinnerFull"
 
 function App() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isLogging } = useAuth()
+
+  useReactQueryConfig()
 
   const Component = useMemo(() => {
     if (isAuthenticated) {
@@ -15,6 +18,10 @@ function App() {
 
     return AuthRoutes
   }, [isAuthenticated])
+
+  if (isLogging) {
+    return <SpinnerFull size="lg" />
+  }
 
   return (
     <Suspense fallback={<SpinnerFull size="lg" />}>

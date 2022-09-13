@@ -1,17 +1,20 @@
 import { Avatar, Box, Flex, Text } from "@chakra-ui/react"
+import { useAuth } from "../../context/AuthContext"
 
 interface HeaderAvatarProps {
   showProfileData: boolean
 }
 
 export const HeaderAvatar = ({ showProfileData }: HeaderAvatarProps) => {
+  const { eu } = useAuth()
+
   return (
     <Flex align="center">
       {showProfileData && (
         <Box mr="4" textAlign="right">
-          <Text>André Luiz</Text>
+          <Text>{eu?.name}</Text>
           <Text color="gray.400" fontSize="small">
-            andre@andre.com
+            {eu?.email || ""}
           </Text>
         </Box>
       )}
@@ -19,7 +22,7 @@ export const HeaderAvatar = ({ showProfileData }: HeaderAvatarProps) => {
       <Box ml="4">
         <Avatar
           size="md"
-          name="André Luiz"
+          name={eu?.name}
           src="https://github.com/andreovski.png"
         />
       </Box>

@@ -1,12 +1,47 @@
-import { Button, Flex, Stack } from "@chakra-ui/react"
-import { Field, Form, Formik } from "formik"
+import React from "react"
+
+import { Button, Flex, Stack, useToast } from "@chakra-ui/react"
+import { Field, Form, Formik, FormikBag } from "formik"
 import { InputForm } from "../../../components/Form/InputForm"
 import { SectionTitle } from "../../../components/SectionTitle"
 
 import { AvatarField } from "../../../components/AvatarField"
+import { useMutationAuthFinishRegister } from "../../../services/api"
+import { useLocation, useNavigate } from "react-router-dom"
 
-export const CompleteRegister = () => {
-  const onSubmit = (values) => {}
+export const FinishRegister = () => {
+  const navigate = useNavigate()
+  const snackbar = useToast()
+  const { state }: any = useLocation()
+
+  const { mutate: finishRegister } = useMutationAuthFinishRegister()
+
+  if (!state) {
+    navigate("/")
+  }
+
+  const onSubmit = (values, formik: FormikBag<any, any>) => {
+    finishRegister(
+      {
+        name: values.name,
+        email: state.email,
+        isAdmin: false,
+        created_at: new Date(),
+      },
+      {
+        onSettled: () => {
+          formik.setSubmitting(false)
+        },
+        onSuccess: () => {
+          snackbar({
+            title: "Cadastro finalizado",
+            description: "Sua conta foi criada com sucesso!",
+          })
+          setTimeout(() => navigate("dashboard"), 1000)
+        },
+      }
+    )
+  }
 
   return (
     <Flex

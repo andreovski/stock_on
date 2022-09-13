@@ -10,54 +10,72 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import * as Yup from "yup"
-import { Field, Form, Formik } from "formik"
+import { useCallback, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 import { InputForm } from "../../../../components/Form/InputForm"
 import { SectionTitle } from "../../../../components/SectionTitle"
-import { useCallback, useMemo } from "react"
+import { Field, Form, Formik } from "formik"
+import { useQueryStockInsertItem } from "../../../../services/api"
+import { useQueryClient } from "react-query"
 
-export function UsersCreate() {
+export function StockCreate() {
   const navigate = useNavigate()
   const toast = useToast()
+  const queryClient = useQueryClient()
 
   const validationSchema = useMemo(() => {
     return Yup.object({
       name: Yup.string()
         .max(30, "O limite de caracteres deve ser menor ou igual a 30.")
         .required("Campo obrigatório"),
-      workplace: Yup.string()
+      mod: Yup.string()
+        .max(10, "O limite de caracteres deve ser menor ou igual a 20.")
+        .required("Campo obrigatório"),
+      size: Yup.number().required("Campo obrigatório"),
+      amount: Yup.number().integer().required("Campo obrigatório"),
+      state: Yup.string()
+        .max(10, "O limite de caracteres deve ser menor ou igual a 20.")
+        .required("Campo obrigatório"),
+      locate: Yup.string()
         .max(20, "O limite de caracteres deve ser menor ou igual a 20.")
         .required("Campo obrigatório"),
-      cpd: Yup.number().required("Campo obrigatório"),
     })
   }, [])
 
+  const { mutate } = useQueryStockInsertItem({
+    onSuccess: () => {
+      queryClient.invalidateQueries(["StockGetItem"])
+    },
+  })
+
   const onSubmit = useCallback(
     (values, formik) => {
-      console.log(values)
+      mutate(values, {
+        onSuccess: () => {
+          setTimeout(() => {
+            formik.resetForm({})
+            toast({
+              title: "Ferramenta cadastrada com sucesso.",
+              status: "success",
+              duration: 9000,
+              isClosable: true,
+            })
 
-      setTimeout(() => {
-        formik.setSubmitting(false)
-        formik.resetForm({})
-        toast({
-          title: "Usuário regristrado com sucesso.",
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-        })
-
-        navigate("/users")
-      }, 1000)
-
-      setTimeout(() => {}, 2500)
+            navigate("/stock")
+          }, 1000)
+        },
+        onSettled: () => {
+          formik.setSubmitting(false)
+        },
+      })
     },
-    [toast, navigate]
+    [toast, navigate, mutate]
   )
 
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
       <Heading size="lg" fontWeight="normal" color="font">
-        Novo usuário
+        Novo produto
       </Heading>
 
       <Divider my="6" borderColor="gray.400" />
@@ -70,14 +88,21 @@ export function UsersCreate() {
         validationSchema={validationSchema}
         validateOnBlur={false}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, errors }) => (
           <Form>
             <VStack spacing="8">
               <SimpleGrid minChildWidth="240px" spacing="8" width="100%">
                 <Field
                   name="name"
                   type="text"
-                  title="Nome completo"
+                  title="Ferramenta"
+                  component={InputForm}
+                  required
+                />
+                <Field
+                  name="mod"
+                  type="text"
+                  title="MOD"
                   component={InputForm}
                   required
                 />
@@ -85,37 +110,53 @@ export function UsersCreate() {
 
               <SimpleGrid minChildWidth="240px" spacing="8" width="100%">
                 <Field
-                  name="workplace"
+                  name="size"
                   type="text"
-                  title="Centro de custo"
+                  title="Tamanho"
                   component={InputForm}
                   required
                 />
                 <Field
-                  name="cpd"
+                  name="amount"
                   type="number"
-                  title="CPD"
+                  title="Quantidade"
+                  component={InputForm}
+                  required
+                />
+              </SimpleGrid>
+
+              <SimpleGrid minChildWidth="240px" spacing="8" width="100%">
+                <Field
+                  name="state"
+                  type="text"
+                  title="Estado"
+                  component={InputForm}
+                  required
+                />
+                <Field
+                  name="locate"
+                  type="text"
+                  title="Local"
                   component={InputForm}
                   required
                 />
               </SimpleGrid>
             </VStack>
 
-            <Flex mt="8" align="center" justify="flex-end">
+            <Flex mt="8" justify="flex-end">
               <HStack spacing="8">
                 <Button
                   variant="unstyled"
                   disabled={isSubmitting}
-                  onClick={() => navigate("/users")}
+                  onClick={() => navigate("/stock")}
                 >
                   Cancelar
                 </Button>
                 <Button
                   type="submit"
-                  colorScheme="blue"
-                  loadingText="Salvando"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
+                  colorScheme="blue"
                 >
                   Salvar
                 </Button>

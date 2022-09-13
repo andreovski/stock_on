@@ -10,13 +10,13 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import * as Yup from "yup"
-import { useCallback, useMemo } from "react"
+import { Field, Form, Formik } from "formik"
 import { useNavigate } from "react-router-dom"
 import { InputForm } from "../../../../components/Form/InputForm"
 import { SectionTitle } from "../../../../components/SectionTitle"
-import { Field, Form, Formik } from "formik"
+import { useCallback, useMemo } from "react"
 
-export function StockCreate() {
+export function UsersCreate() {
   const navigate = useNavigate()
   const toast = useToast()
 
@@ -25,29 +25,20 @@ export function StockCreate() {
       name: Yup.string()
         .max(30, "O limite de caracteres deve ser menor ou igual a 30.")
         .required("Campo obrigatório"),
-      mod: Yup.string()
-        .max(10, "O limite de caracteres deve ser menor ou igual a 20.")
-        .required("Campo obrigatório"),
-      size: Yup.number().required("Campo obrigatório"),
-      amount: Yup.number().integer().required("Campo obrigatório"),
-      state: Yup.string()
-        .max(10, "O limite de caracteres deve ser menor ou igual a 20.")
-        .required("Campo obrigatório"),
-      location: Yup.string()
+      workplace: Yup.string()
         .max(20, "O limite de caracteres deve ser menor ou igual a 20.")
         .required("Campo obrigatório"),
+      cpd: Yup.number().required("Campo obrigatório"),
     })
   }, [])
 
   const onSubmit = useCallback(
     (values, formik) => {
-      console.log(values)
-
       setTimeout(() => {
         formik.setSubmitting(false)
         formik.resetForm({})
         toast({
-          title: "Ferramenta cadastrada com sucesso.",
+          title: "Usuário regristrado com sucesso.",
           status: "success",
           duration: 9000,
           isClosable: true,
@@ -55,6 +46,8 @@ export function StockCreate() {
 
         navigate("/users")
       }, 1000)
+
+      setTimeout(() => {}, 2500)
     },
     [toast, navigate]
   )
@@ -62,7 +55,7 @@ export function StockCreate() {
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
       <Heading size="lg" fontWeight="normal" color="font">
-        Novo produto
+        Novo usuário
       </Heading>
 
       <Divider my="6" borderColor="gray.400" />
@@ -82,14 +75,7 @@ export function StockCreate() {
                 <Field
                   name="name"
                   type="text"
-                  title="Ferramenta"
-                  component={InputForm}
-                  required
-                />
-                <Field
-                  name="mod"
-                  type="text"
-                  title="MOD"
+                  title="Nome completo"
                   component={InputForm}
                   required
                 />
@@ -97,53 +83,37 @@ export function StockCreate() {
 
               <SimpleGrid minChildWidth="240px" spacing="8" width="100%">
                 <Field
-                  name="size"
+                  name="workplace"
                   type="text"
-                  title="Tamanho"
+                  title="Centro de custo"
                   component={InputForm}
                   required
                 />
                 <Field
-                  name="amount"
+                  name="cpd"
                   type="number"
-                  title="Quantidade"
-                  component={InputForm}
-                  required
-                />
-              </SimpleGrid>
-
-              <SimpleGrid minChildWidth="240px" spacing="8" width="100%">
-                <Field
-                  name="state"
-                  type="text"
-                  title="Estado"
-                  component={InputForm}
-                  required
-                />
-                <Field
-                  name="location"
-                  type="text"
-                  title="Local"
+                  title="CPD"
                   component={InputForm}
                   required
                 />
               </SimpleGrid>
             </VStack>
 
-            <Flex mt="8" justify="flex-end">
+            <Flex mt="8" align="center" justify="flex-end">
               <HStack spacing="8">
                 <Button
                   variant="unstyled"
                   disabled={isSubmitting}
-                  onClick={() => navigate("/stock")}
+                  onClick={() => navigate("/users")}
                 >
                   Cancelar
                 </Button>
                 <Button
                   type="submit"
+                  colorScheme="blue"
+                  loadingText="Salvando"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
-                  colorScheme="blue"
                 >
                   Salvar
                 </Button>

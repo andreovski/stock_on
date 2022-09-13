@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react"
+import React, { useMemo } from "react"
 
 import {
   Alert,
@@ -12,7 +12,6 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  useToast,
 } from "@chakra-ui/react"
 
 import { HeaderLogo } from "../../components/Header/HeaderLogo"
@@ -24,29 +23,15 @@ import { InputForm } from "../../components/Form/InputForm"
 import * as Yup from "yup"
 import { RiArrowLeftLine } from "react-icons/ri"
 import { SectionTitle } from "../../components/SectionTitle"
-import { useMutationSignUpWithCredentials } from "../../services/api"
+import { useMutationAuthSignUpWithCredentials } from "../../services/api"
+import { useAuth } from "../../context/AuthContext"
 
 export const SignUp: React.FC = () => {
   const navigate = useNavigate()
-  const snackbar = useToast()
 
   const invalidPassword = "A senha não atende as exigências!"
 
-  const { mutate: createAccount } = useMutationSignUpWithCredentials(
-    {},
-    {
-      onSuccess: () => {
-        snackbar({
-          title: "Conta criada com sucesso!",
-          status: "success",
-          description:
-            "Você já pode logar em sua conta usando suas credenciais.",
-        })
-
-        setTimeout(() => navigate("/"), 1200)
-      },
-    }
-  )
+  const { mutate: createAccount } = useMutationAuthSignUpWithCredentials()
 
   const validationSchema = useMemo(() => {
     return Yup.object({
@@ -69,7 +54,7 @@ export const SignUp: React.FC = () => {
     return (error?.password || "").includes(invalidPassword)
   }
 
-  const onSubmit = useCallback((values, formik: FormikBag<any, any>) => {
+  const onSubmit = (values, formik: FormikBag<any, any>) => {
     createAccount(
       { email: values.email, password: values.password },
       {
@@ -84,9 +69,12 @@ export const SignUp: React.FC = () => {
         onSettled: () => {
           formik.setSubmitting(false)
         },
+        onSuccess: () => {
+          navigate("/finishRegister", { state: values })
+        },
       }
     )
-  }, [])
+  }
 
   return (
     <Flex

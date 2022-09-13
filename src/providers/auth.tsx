@@ -1,7 +1,21 @@
 import { supabase } from "../services/supabaseClient"
 
-export const validateUser = () => {
-  return supabase.auth.user()
+export const validateUser = async () => {
+  const data = localStorage.getItem("@stock.on/auth")
+
+  if (!data) return null
+
+  const dataFormatted = JSON.parse(data)
+
+  const { data: user, error } = await supabase.auth.api.getUser(
+    dataFormatted.session.access_token
+  )
+
+  if (error) {
+    throw error
+  }
+
+  return user || null
 }
 
 export const signOut = () => {
@@ -19,5 +33,6 @@ export const signIn = async ({ email, password }) => {
     throw data.error
   }
 
+  localStorage.setItem("@stock.on/auth", JSON.stringify(data))
   return data
 }

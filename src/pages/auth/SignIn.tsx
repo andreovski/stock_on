@@ -10,11 +10,12 @@ import {
   Link as ChakraLink,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react"
 
 import { useAuth } from "../../context/AuthContext"
 
-import { useMutationSignInWithCredentials } from "../../services/api"
+import { useMutationAuthSignInWithCredentials } from "../../services/api"
 
 import { Input } from "../../components/Form/Input"
 import { FcGoogle } from "react-icons/fc"
@@ -31,13 +32,14 @@ export const SignIn = () => {
 
   const navigate = useNavigate()
 
-  const { mutate: signIn, isLoading } = useMutationSignInWithCredentials({
+  const snackbar = useToast()
+
+  const { mutate: signIn, isLoading } = useMutationAuthSignInWithCredentials({
     onError: (data: any) => {
       setError(data)
     },
     onSuccess: () => {
       signInWithCredetials()
-
       setError(null)
       navigate("/dashboard")
     },

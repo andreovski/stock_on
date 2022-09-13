@@ -4,10 +4,10 @@ import { SidebarDrawerProvider } from "../context/SidebarContext"
 import { AdminLayout } from "../components/AdminLayout"
 
 import Dashboard from "../pages/admin/Dashboard"
-import { UsersList } from "../pages/admin/Register/Users/UsersList"
-import { UsersCreate } from "../pages/admin/Register/Users/UsersCreate"
-import { StockList } from "../pages/admin/Register/Stock/StockList"
-import { StockCreate } from "../pages/admin/Register/Stock/StockCreate"
+import { UsersList } from "../pages/admin/Registers/Users/UsersList"
+import { UsersCreate } from "../pages/admin/Registers/Users/UsersCreate"
+import { StockList } from "../pages/admin/Registers/Stock/StockList"
+import { StockCreate } from "../pages/admin/Registers/Stock/StockCreate"
 
 export default function AppRoutes() {
   return (

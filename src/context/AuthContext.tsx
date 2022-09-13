@@ -8,41 +8,41 @@ import {
 } from "react"
 
 import { validateUser, signOut } from "../providers/auth"
-import { useQueryAccountGetProfileById } from "../services/api"
-import { supabase } from "../services/supabaseClient"
+import { useQueryUserGetUserById } from "../services/api"
 
 interface IAuthContext {
   children: ReactNode
 }
 
 interface IAuthContextData {
-  user: object
+  eu: any
+  setUser: any
   isAuthenticated: boolean
   signInWithCredetials: () => void
   handleSignOut: () => void
+  isLogging: boolean
 }
 
 const AuthContext = createContext({} as IAuthContextData)
 
 export function AuthProvider({ children }: IAuthContext) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLogging, setIsLogging] = useState(false)
   const [user, setUser] = useState<any>()
 
-  useEffect(() => {
-    const isLogged = validateUser()
-
-    if (isLogged) {
-      setIsAuthenticated(true)
-      setUser(isLogged)
+  const { data: eu } = useQueryUserGetUserById(
+    { id: user?.id },
+    {
+      enabled: !!user,
     }
-  }, [])
-
-  const { data } = useQueryAccountGetProfileById(
-    { id: `eq.${user?.id}` },
-    { enabled: !!user }
   )
 
-  console.log(data)
+  useEffect(() => {
+    setIsLogging(true)
+    validateUser()
+      .then((data) => [setUser(data), setIsAuthenticated(true)])
+      .finally(() => setIsLogging(false))
+  }, [])
 
   const signInWithCredetials = useCallback(() => {
     setIsAuthenticated(true)
@@ -58,8 +58,10 @@ export function AuthProvider({ children }: IAuthContext) {
       value={{
         signInWithCredetials,
         isAuthenticated,
-        user,
+        eu,
+        setUser,
         handleSignOut,
+        isLogging,
       }}
     >
       {children}

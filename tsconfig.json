@@ -1,5 +1,7 @@
 {
   "include": ["src/*", "src/services/api"],
+  "exclude": ["node_modules"],
+
   "compilerOptions": {
     "target": "es5",
     "jsx": "react-jsx",
