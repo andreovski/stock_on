@@ -22,7 +22,7 @@ export const signOut = () => {
   const { access_token } = supabase.auth.session()
 
   return supabase.auth.api.signOut(access_token).then(() => {
-    localStorage.removeItem("supabase.auth.token")
+    localStorage.removeItem("@stock.on/auth")
   })
 }
 

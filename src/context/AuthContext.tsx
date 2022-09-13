@@ -18,7 +18,7 @@ interface IAuthContextData {
   eu: any
   setUser: any
   isAuthenticated: boolean
-  signInWithCredetials: () => void
+  signInWithCredetials: (data) => void
   handleSignOut: () => void
   isLogging: boolean
 }
@@ -44,8 +44,9 @@ export function AuthProvider({ children }: IAuthContext) {
       .finally(() => setIsLogging(false))
   }, [])
 
-  const signInWithCredetials = useCallback(() => {
+  const signInWithCredetials = useCallback((data) => {
     setIsAuthenticated(true)
+    setUser(data)
   }, [])
 
   const handleSignOut = useCallback(async () => {

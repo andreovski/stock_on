@@ -20,11 +20,7 @@ export const HeaderAvatar = ({ showProfileData }: HeaderAvatarProps) => {
       )}
 
       <Box ml="4">
-        <Avatar
-          size="md"
-          name={eu?.name}
-          src="https://github.com/andreovski.png"
-        />
+        <Avatar size="md" name={eu?.name} />
       </Box>
     </Flex>
   )

@@ -23,6 +23,7 @@ export const FinishRegister = () => {
   const onSubmit = (values, formik: FormikBag<any, any>) => {
     finishRegister(
       {
+        id: state.id,
         name: values.name,
         email: state.email,
         isAdmin: false,

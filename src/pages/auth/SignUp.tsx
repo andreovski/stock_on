@@ -69,8 +69,8 @@ export const SignUp: React.FC = () => {
         onSettled: () => {
           formik.setSubmitting(false)
         },
-        onSuccess: () => {
-          navigate("/finishRegister", { state: values })
+        onSuccess: (data) => {
+          navigate("/finishRegister", { state: data })
         },
       }
     )

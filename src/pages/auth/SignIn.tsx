@@ -32,14 +32,12 @@ export const SignIn = () => {
 
   const navigate = useNavigate()
 
-  const snackbar = useToast()
-
   const { mutate: signIn, isLoading } = useMutationAuthSignInWithCredentials({
     onError: (data: any) => {
       setError(data)
     },
-    onSuccess: () => {
-      signInWithCredetials()
+    onSuccess: ({ user }) => {
+      signInWithCredetials(user)
       setError(null)
       navigate("/dashboard")
     },
