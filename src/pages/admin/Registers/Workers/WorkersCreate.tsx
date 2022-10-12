@@ -14,11 +14,20 @@ import { Field, Form, Formik } from "formik"
 import { useNavigate } from "react-router-dom"
 import { InputForm } from "../../../../components/Form/InputForm"
 import { SectionTitle } from "../../../../components/SectionTitle"
-import { useCallback, useMemo } from "react"
+import { useMemo } from "react"
+import { useMutationWorkersInsertWorker } from "../../../../services/api/workers"
+import { useQueryClient } from "react-query"
 
-export function UsersCreate() {
+export function WorkersCreate() {
   const navigate = useNavigate()
   const toast = useToast()
+  const queryClient = useQueryClient()
+
+  const { mutate } = useMutationWorkersInsertWorker({
+    onSuccess: () => {
+      queryClient.invalidateQueries(["StockGetItem"])
+    },
+  })
 
   const validationSchema = useMemo(() => {
     return Yup.object({
@@ -32,30 +41,30 @@ export function UsersCreate() {
     })
   }, [])
 
-  const onSubmit = useCallback(
-    (values, formik) => {
-      setTimeout(() => {
-        formik.setSubmitting(false)
+  const onSubmit = (values, formik) => {
+    mutate(values, {
+      onSuccess: () => {
         formik.resetForm({})
+
         toast({
-          title: "Usuário regristrado com sucesso.",
+          title: "Trabalhador regristrado com sucesso.",
           status: "success",
-          duration: 9000,
-          isClosable: true,
         })
 
-        navigate("/users")
-      }, 1000)
-
-      setTimeout(() => {}, 2500)
-    },
-    [toast, navigate]
-  )
+        setTimeout(() => {
+          navigate("/workers")
+        }, 500)
+      },
+      onSettled: () => {
+        formik.setSubmitting(false)
+      },
+    })
+  }
 
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
       <Heading size="lg" fontWeight="normal" color="font">
-        Novo usuário
+        Novo funcionário
       </Heading>
 
       <Divider my="6" borderColor="gray.400" />

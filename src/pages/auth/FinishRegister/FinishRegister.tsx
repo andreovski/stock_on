@@ -8,6 +8,7 @@ import { SectionTitle } from "../../../components/SectionTitle"
 import { AvatarField } from "../../../components/AvatarField"
 import { useMutationAuthFinishRegister } from "../../../services/api"
 import { useLocation, useNavigate } from "react-router-dom"
+import { supabase } from "../../../services/supabaseClient"
 
 export const FinishRegister = () => {
   const navigate = useNavigate()
@@ -20,28 +21,44 @@ export const FinishRegister = () => {
     navigate("/")
   }
 
-  const onSubmit = (values, formik: FormikBag<any, any>) => {
-    finishRegister(
-      {
-        id: state.id,
-        name: values.name,
-        email: state.email,
-        isAdmin: false,
-        created_at: new Date(),
-      },
-      {
-        onSettled: () => {
-          formik.setSubmitting(false)
+  const uploadImg = async ({ avatar }) => {
+    try {
+      const data = await fetch(avatar).then((res) => res.blob())
+      const fileExtensionType = data.type.split("/")[1]
+
+      await supabase.storage
+        .from("avatars")
+        .upload(`avatar-${state.id}.${fileExtensionType}`, data)
+    } catch {
+      snackbar({ title: "Erro ao realizar o upload", status: "error" })
+    }
+  }
+
+  const onSubmit = async (values, formik: FormikBag<any, any>) => {
+    try {
+      await uploadImg(values)
+      await finishRegister(
+        {
+          id: state.id,
+          name: values.name,
+          email: state.email,
+          isAdmin: false,
+          created_at: new Date(),
         },
-        onSuccess: () => {
-          snackbar({
-            title: "Cadastro finalizado",
-            description: "Sua conta foi criada com sucesso!",
-          })
-          setTimeout(() => navigate("dashboard"), 1000)
-        },
-      }
-    )
+        {
+          onSettled: () => {
+            formik.setSubmitting(false)
+          },
+          onSuccess: () => {
+            snackbar({
+              title: "Cadastro finalizado",
+              description: "Sua conta foi criada com sucesso!",
+            })
+            setTimeout(() => navigate("dashboard"), 1000)
+          },
+        }
+      )
+    } catch {}
   }
 
   return (

@@ -5,6 +5,7 @@ import {
   Heading,
   Icon,
   IconButton,
+  Spinner,
   Table,
   Tbody,
   Td,
@@ -18,42 +19,41 @@ import { RiAddLine, RiPencilFill } from "react-icons/ri"
 
 import { Pagination } from "../../../../components/Pagination"
 import { useNavigate } from "react-router-dom"
-import { Suspense } from "react"
-import { useQueryStockGetItems } from "../../../../services/api"
-import { SpinnerFull } from "../../../../components/SpinnerFull"
-import { IStock } from "../../../../services/api/interface/iStock"
+import { memo, Suspense } from "react"
+import { useQueryWorkersGetWorkers } from "../../../../services/api/workers"
+import { IWorkers } from "../../../../services/api/interface/iWorkers"
 
-export const StockList = () => {
+export const WorkersList = memo(() => {
   return (
-    <Suspense fallback={<SpinnerFull />}>
-      <StockListComp />
+    <Suspense fallback={<Spinner color="primary" alignSelf="center" />}>
+      <WorkersListComp />
     </Suspense>
   )
-}
+})
 
-const StockListComp = () => {
+const WorkersListComp = () => {
   const navigate = useNavigate()
-
-  const { data = [] } = useQueryStockGetItems()
 
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
   })
 
-  const handleCreateUser = () => {
-    navigate("/stock/create")
+  const handleCreateWorker = () => {
+    navigate("/workers/create")
   }
 
-  const handleEditItem = (item: IStock) => {
-    navigate(`/stock/edit/${item.id}`)
+  const handleEditItem = (item: IWorkers) => {
+    navigate(`/workers/edit/${item.id}`)
   }
+
+  const { data } = useQueryWorkersGetWorkers()
 
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
       <Flex mb="8" justify="space-between" align="center">
         <Heading size="lg" fontWeight="normal">
-          Estoque
+          Usuários
         </Heading>
 
         <Button
@@ -62,59 +62,43 @@ const StockListComp = () => {
           fontSize="sm"
           colorScheme="blue"
           leftIcon={<Icon as={RiAddLine} fontSize="20" />}
-          onClick={handleCreateUser}
+          onClick={handleCreateWorker}
         >
           Novo
         </Button>
       </Flex>
+
       <Table colorScheme="blackAlpha">
         <Thead>
           {!isWideVersion ? (
             <Tr>
-              <Th color="gray.500">Ferramenta / MOD</Th>
+              <Th color="gray.500">Nome / Centro de custo</Th>
               <Th width={8} />
             </Tr>
           ) : (
             <Tr>
-              <Th color="gray.500">Ferramenta / MOD</Th>
-              <Th color="gray.500">Tamanho / Estado</Th>
-              <Th color="gray.500">Quantidade / Local</Th>
+              <Th color="gray.500">Nome / Centro de custo</Th>
+              <Th color="gray.500">CPD</Th>
               <Th width={8} />
             </Tr>
           )}
         </Thead>
 
         <Tbody>
-          {data.map((item: IStock) => (
-            <Tr>
+          {data.map((item) => (
+            <Tr key={item.id}>
               <Td>
                 <Box>
                   <Text fontWeight="bold">{item.name}</Text>
                   <Text fontSize="sm" color="gray.600">
-                    {item.mod}
+                    {item.workplace}
                   </Text>
                 </Box>
               </Td>
 
               {isWideVersion && (
                 <Td>
-                  <Box>
-                    <Text fontWeight="bold">{item.size}</Text>
-                    <Text fontSize="sm" color="gray.600">
-                      {item.state}
-                    </Text>
-                  </Box>
-                </Td>
-              )}
-
-              {isWideVersion && (
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">{item.amount}</Text>
-                    <Text fontSize="sm" color="gray.600">
-                      {item.locate}
-                    </Text>
-                  </Box>
+                  <Text>{item.cpd}</Text>
                 </Td>
               )}
 

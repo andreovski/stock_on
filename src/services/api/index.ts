@@ -1,6 +1,5 @@
 import {
   MutateOptions,
-  UseBaseQueryOptions,
   useMutation,
   UseMutationResult,
   useQuery,
@@ -10,7 +9,7 @@ import {
 import { signIn } from "../../providers/auth"
 import { supabase } from "../supabaseClient"
 import { IUserById } from "./interface"
-import { IStock } from "./interface/stock"
+import { IStock, IStockGetItemById } from "./interface/iStock"
 
 export const useMutationAuthSignInWithCredentials = (
   config?: MutateOptions<any, any>
@@ -85,10 +84,29 @@ export const useQueryStockGetItems = (config?: UseQueryOptions) =>
     { ...config }
   ) as UseQueryResult<IStock[]>
 
-export const useQueryStockInsertItem = (config?: MutateOptions) =>
+export const useQueryStockGetItemById = (
+  { id }: IStockGetItemById,
+  config?: UseQueryOptions
+) =>
+  useQuery(
+    `stockGetItemsById/${id}`,
+    async () => {
+      const { data, error } = await supabase
+        .from<IStock>("stock")
+        .select("*")
+        .eq("id", id)
+        .single()
+
+      if (error) throw error
+      return data
+    },
+    { ...config }
+  ) as UseQueryResult<IStock>
+
+export const useMutationStockInsertItem = (config?: MutateOptions) =>
   useMutation(
     `stockInsertItem`,
-    async (payload?: any) => {
+    async (payload?: Omit<IStock, "id">) => {
       const { data, error } = await supabase
         .from("stock")
         .insert(payload)
@@ -97,5 +115,22 @@ export const useQueryStockInsertItem = (config?: MutateOptions) =>
       if (error) throw error
       return data
     },
+    // @ts-ignore
+    { ...config }
+  )
+
+export const useMutationStockEditItem = (config?: MutateOptions) =>
+  useMutation(
+    `stockInsertItem`,
+    async (payload?: IStock) => {
+      const { data, error } = await supabase
+        .from("stock")
+        .update(payload)
+        .match({ id: payload.id })
+
+      if (error) throw error
+      return data
+    },
+    // @ts-ignore
     { ...config }
   )

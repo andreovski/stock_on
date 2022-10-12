@@ -21,7 +21,7 @@ export function SidebarNav() {
       </SidebarNavSection>
 
       <SidebarNavSection title="CADASTROS">
-        <SidebarNavLink link="users" icon={RiContactsLine}>
+        <SidebarNavLink link="workers" icon={RiContactsLine}>
           <Text ml="4" fontWeight="medium">
             Usuários
           </Text>

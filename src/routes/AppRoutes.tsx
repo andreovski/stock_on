@@ -4,10 +4,13 @@ import { SidebarDrawerProvider } from "../context/SidebarContext"
 import { AdminLayout } from "../components/AdminLayout"
 
 import Dashboard from "../pages/admin/Dashboard"
-import { UsersList } from "../pages/admin/Registers/Users/UsersList"
-import { UsersCreate } from "../pages/admin/Registers/Users/UsersCreate"
+import { WorkersList } from "../pages/admin/Registers/Workers/WorkersList"
+import { WorkersCreate } from "../pages/admin/Registers/Workers/WorkersCreate"
 import { StockList } from "../pages/admin/Registers/Stock/StockList"
 import { StockCreate } from "../pages/admin/Registers/Stock/StockCreate"
+import { StockEdit } from "../pages/admin/Registers/Stock/StockEdit"
+import { WorkersEdit } from "../pages/admin/Registers/Workers/WorkersEdit"
+import { FinishRegister } from "../pages/auth/FinishRegister/FinishRegister"
 
 export default function AppRoutes() {
   return (
@@ -15,10 +18,13 @@ export default function AppRoutes() {
       <AdminLayout>
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/users" element={<UsersList />} />
-          <Route path="/users/create" element={<UsersCreate />} />
+          <Route path="/workers" element={<WorkersList />} />
+          <Route path="/workers/create" element={<WorkersCreate />} />
+          <Route path="/workers/edit/:id" element={<WorkersEdit />} />
           <Route path="/stock" element={<StockList />} />
           <Route path="/stock/create" element={<StockCreate />} />
+          <Route path="/stock/edit/:id" element={<StockEdit />} />
+          <Route path="/finishRegister" element={<FinishRegister />} />
           <Route path="/*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </AdminLayout>

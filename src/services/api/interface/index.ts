@@ -1,3 +1,7 @@
+export interface IId {
+  id: string | any
+}
+
 export interface IProfile {
   id: string
   name: string

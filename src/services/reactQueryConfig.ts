@@ -6,33 +6,34 @@ export const useReactQueryConfig = () => {
 
   const queryClient = useQueryClient()
 
-  queryClient.defaultQueryOptions({
-    suspense: true,
-    refetchInterval: false,
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-    useErrorBoundary: undefined,
-    onError: (err: any) => {
-      snackbar({
-        title: "Error",
-        description: err?.message || "Try again",
-        status: "error",
-      })
+  queryClient.setDefaultOptions({
+    mutations: {
+      onError: (err: any) => {
+        snackbar({
+          title: "Error",
+          description: err?.message || "Try again",
+          status: "error",
+        })
+      },
+      useErrorBoundary: undefined,
     },
-    retry: 1,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    staleTime: 0,
-    cacheTime: 5 * 60 * 1000, // 5 min
-  })
-
-  queryClient.defaultMutationOptions({
-    onError: (err: any) => {
-      snackbar({
-        title: "Error",
-        description: err?.message || "Try again",
-        status: "error",
-      })
+    queries: {
+      suspense: true,
+      refetchInterval: false,
+      refetchOnMount: true,
+      refetchOnWindowFocus: false,
+      useErrorBoundary: undefined,
+      onError: (err: any) => {
+        snackbar({
+          title: "Error",
+          description: err?.message || "Try again",
+          status: "error",
+        })
+      },
+      retry: 1,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      staleTime: 0,
+      cacheTime: 5 * 60 * 1000, // 5 min
     },
-    useErrorBoundary: undefined,
   })
 }

@@ -1,3 +1,4 @@
+import React, { Suspense } from "react"
 import {
   Box,
   Button,
@@ -10,18 +11,31 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import * as Yup from "yup"
-import { useCallback, useMemo } from "react"
-import { useNavigate } from "react-router-dom"
+import { useMemo } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import { InputForm } from "../../../../components/Form/InputForm"
 import { SectionTitle } from "../../../../components/SectionTitle"
 import { Field, Form, Formik } from "formik"
-import { useMutationStockInsertItem } from "../../../../services/api"
+import {
+  useMutationStockEditItem,
+  useQueryStockGetItemById,
+} from "../../../../services/api"
 import { useQueryClient } from "react-query"
+import { SpinnerFull } from "../../../../components/SpinnerFull"
 
-export function StockCreate() {
+export function StockEdit() {
+  return (
+    <Suspense fallback={<SpinnerFull size="lg" />}>
+      <StockEditComp />
+    </Suspense>
+  )
+}
+
+export function StockEditComp() {
   const navigate = useNavigate()
   const toast = useToast()
   const queryClient = useQueryClient()
+  const { id } = useParams<string>()
 
   const validationSchema = useMemo(() => {
     return Yup.object({
@@ -42,39 +56,39 @@ export function StockCreate() {
     })
   }, [])
 
-  const { mutate } = useMutationStockInsertItem({
+  const { data } = useQueryStockGetItemById({ id })
+
+  const { mutate } = useMutationStockEditItem({
     onSuccess: () => {
-      queryClient.invalidateQueries(["StockGetItem"])
+      queryClient.invalidateQueries(["stockGetItems"])
+      queryClient.invalidateQueries([`stockGetItemsById/${id}`])
     },
   })
 
-  const onSubmit = useCallback(
-    (values, formik) => {
-      mutate(values, {
-        onSuccess: () => {
-          formik.resetForm({})
+  const onSubmit = (values, formik) => {
+    mutate(values, {
+      onSuccess: () => {
+        toast({
+          title: "Ferramenta editada com sucesso.",
+          status: "success",
+        })
 
-          toast({
-            title: "Ferramenta cadastrada com sucesso.",
-            status: "success",
-          })
+        formik.resetForm({ values })
 
-          setTimeout(() => {
-            navigate("/stock")
-          }, 500)
-        },
-        onSettled: () => {
-          formik.setSubmitting(false)
-        },
-      })
-    },
-    [toast, navigate, mutate]
-  )
+        setTimeout(() => {
+          navigate("/stock")
+        }, 1000)
+      },
+      onSettled: () => {
+        formik.setSubmitting(false)
+      },
+    })
+  }
 
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
       <Heading size="lg" fontWeight="normal" color="font">
-        Novo produto
+        Editar produto
       </Heading>
 
       <Divider my="6" borderColor="gray.400" />
@@ -83,7 +97,7 @@ export function StockCreate() {
 
       <Formik
         onSubmit={onSubmit}
-        initialValues={{}}
+        initialValues={data || {}}
         validationSchema={validationSchema}
         validateOnBlur={false}
       >

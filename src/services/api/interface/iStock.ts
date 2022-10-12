@@ -1,4 +1,5 @@
 export interface IStock {
+  id: string
   name: string
   mod: string
   size: number
@@ -6,4 +7,8 @@ export interface IStock {
   state: string
   locate: string
   created_at: string
+}
+
+export interface IStockGetItemById {
+  id: string
 }
