@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/react"
 import React, { ReactNode } from "react"
+import { useLocation } from "react-router-dom"
 
 import { Header } from "../Header"
 import { Sidebar } from "../Sidebar"
@@ -9,6 +10,12 @@ interface IAdminLayout {
 }
 
 export function AdminLayout({ children }: IAdminLayout) {
+  const { pathname } = useLocation()
+
+  if (pathname.includes("finishRegister")) {
+    return <>{children}</>
+  }
+
   return (
     <Flex direction="column" height="100vh">
       <Header />

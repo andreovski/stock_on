@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from "react"
+import { useNavigate } from "react-router-dom"
 
 import { validateUser, signOut } from "../providers/auth"
 import { useQueryUserGetUserById } from "../services/api"
@@ -30,10 +31,18 @@ export function AuthProvider({ children }: IAuthContext) {
   const [isLogging, setIsLogging] = useState(false)
   const [user, setUser] = useState<any>()
 
+  const navigate = useNavigate()
+
   const { data: eu } = useQueryUserGetUserById(
     { id: user?.id },
     {
       enabled: !!user,
+      useErrorBoundary: false,
+      onError: (err: any) => {
+        if (err.code === "PGRST116") {
+          navigate("/finishRegister", { state: user })
+        }
+      },
     }
   )
 

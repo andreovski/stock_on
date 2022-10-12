@@ -17,6 +17,8 @@ export default function AppRoutes() {
     <SidebarDrawerProvider>
       <AdminLayout>
         <Routes>
+          <Route path="/finishRegister" element={<FinishRegister />} />
+
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/workers" element={<WorkersList />} />
           <Route path="/workers/create" element={<WorkersCreate />} />
@@ -24,7 +26,6 @@ export default function AppRoutes() {
           <Route path="/stock" element={<StockList />} />
           <Route path="/stock/create" element={<StockCreate />} />
           <Route path="/stock/edit/:id" element={<StockEdit />} />
-          <Route path="/finishRegister" element={<FinishRegister />} />
           <Route path="/*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </AdminLayout>

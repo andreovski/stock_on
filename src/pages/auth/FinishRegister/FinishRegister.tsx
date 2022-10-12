@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 
 import { Button, Flex, Stack, useToast } from "@chakra-ui/react"
 import { Field, Form, Formik, FormikBag } from "formik"
@@ -8,35 +8,40 @@ import { SectionTitle } from "../../../components/SectionTitle"
 import { AvatarField } from "../../../components/AvatarField"
 import { useMutationAuthFinishRegister } from "../../../services/api"
 import { useLocation, useNavigate } from "react-router-dom"
-import { supabase } from "../../../services/supabaseClient"
+import { useAuth } from "../../../context/AuthContext"
+// import { supabase } from "../../../services/supabaseClient"
 
 export const FinishRegister = () => {
   const navigate = useNavigate()
   const snackbar = useToast()
   const { state }: any = useLocation()
+  const { isAuthenticated } = useAuth()
 
   const { mutate: finishRegister } = useMutationAuthFinishRegister()
 
-  if (!state) {
-    navigate("/")
-  }
-
-  const uploadImg = async ({ avatar }) => {
-    try {
-      const data = await fetch(avatar).then((res) => res.blob())
-      const fileExtensionType = data.type.split("/")[1]
-
-      await supabase.storage
-        .from("avatars")
-        .upload(`avatar-${state.id}.${fileExtensionType}`, data)
-    } catch {
-      snackbar({ title: "Erro ao realizar o upload", status: "error" })
+  useEffect(() => {
+    if (!state && !isAuthenticated) {
+      navigate("/")
     }
-  }
+    //eslint-disable-next-line
+  }, [])
+
+  // const uploadImg = async ({ avatar }) => {
+  //   try {
+  //     const data = await fetch(avatar).then((res) => res.blob())
+  //     const fileExtensionType = data.type.split("/")[1]
+
+  //     await supabase.storage
+  //       .from("avatars")
+  //       .upload(`avatar-${state.id}.${fileExtensionType}`, data)
+  //   } catch {
+  //     snackbar({ title: "Erro ao realizar o upload", status: "error" })
+  //   }
+  // }
 
   const onSubmit = async (values, formik: FormikBag<any, any>) => {
     try {
-      await uploadImg(values)
+      // await uploadImg(values)
       await finishRegister(
         {
           id: state.id,
@@ -80,7 +85,12 @@ export const FinishRegister = () => {
         <Formik onSubmit={onSubmit} initialValues={{}} validateOnBlur={false}>
           {({ values }) => (
             <Form noValidate>
-              <AvatarField name="avatar" size="2xl" avatarFieldName={null} />
+              <AvatarField
+                name="avatar"
+                size="2xl"
+                disabled
+                avatarFieldName={values?.name}
+              />
 
               <SectionTitle title="Complete seu cadastro" />
 
