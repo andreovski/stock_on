@@ -1,15 +1,13 @@
 import {
   FormControl,
   FormErrorMessage,
-  Icon,
-  Input as ChakraInput,
-  InputGroup,
   InputProps as ChakraInputProps,
-  InputRightElement,
 } from "@chakra-ui/react"
 import { getIn } from "formik"
 import { useMemo } from "react"
-import { RiCheckLine } from "react-icons/ri"
+import { Input } from "./Input"
+import { InputSelect } from "./InputSelect"
+import { Textarea } from "./Textarea"
 
 interface InputProps extends ChakraInputProps {
   title: string
@@ -25,11 +23,12 @@ export function InputForm({
   form,
   required = false,
   validateFieldIndicator,
+  type,
   ...props
 }: InputProps) {
   const { name, value } = field
-  const { errors, touched, submitCount } = form
-
+  const { errors, touched, submitCount, setFieldValue } = form
+  console.log(value, name)
   const error = getIn(errors, name)
   const wasTouched = getIn(touched, name)
 
@@ -45,37 +44,37 @@ export function InputForm({
     return false
   }, [validateFieldIndicator, error, value])
 
+  const rest = useMemo(
+    () => ({
+      id: name,
+      name,
+      placeholder: titleValidated,
+      isValid,
+      type,
+      setFieldValue,
+      ...field,
+      ...props,
+    }),
+    [field, isValid, name, props, setFieldValue, titleValidated, type]
+  )
+
+  const Component = useMemo(() => {
+    switch (type) {
+      case "textarea":
+        return <Textarea {...rest} />
+      case "select":
+        return <InputSelect {...rest} />
+      default:
+        return <Input {...rest} />
+    }
+  }, [rest, type])
+
   return (
     <FormControl
       isInvalid={(!!error && !!wasTouched) || (submitCount > 0 && !!error)}
+      variant="floating"
     >
-      <InputGroup>
-        <ChakraInput
-          id={name}
-          name={name}
-          placeholder={titleValidated}
-          focusBorderColor={"primary"}
-          bgColor="background.100"
-          variant="filled"
-          size="lg"
-          {...field}
-          {...props}
-        />
-        {isValid && (
-          <InputRightElement
-            pointerEvents="none"
-            children={
-              <Icon
-                as={RiCheckLine}
-                color="green"
-                mt={2}
-                mr={2}
-                fontSize="22"
-              />
-            }
-          />
-        )}
-      </InputGroup>
+      {Component}
       <FormErrorMessage>{error}</FormErrorMessage>
     </FormControl>
   )

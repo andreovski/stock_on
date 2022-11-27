@@ -12,12 +12,14 @@ function App() {
   useReactQueryConfig()
 
   const Component = useMemo(() => {
+    if (isLogging) return null
+
     if (isAuthenticated) {
       return AppRoutes
     }
 
     return AuthRoutes
-  }, [isAuthenticated])
+  }, [isAuthenticated, isLogging])
 
   if (isLogging) {
     return <SpinnerFull size="lg" />

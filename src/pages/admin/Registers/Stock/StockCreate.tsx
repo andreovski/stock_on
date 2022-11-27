@@ -31,7 +31,9 @@ export function StockCreate() {
       mod: Yup.string()
         .max(10, "O limite de caracteres deve ser menor ou igual a 20.")
         .required("Campo obrigatório"),
-      size: Yup.number().required("Campo obrigatório"),
+      size: Yup.number()
+        .required("Campo obrigatório")
+        .typeError("Campo deve ser numérico"),
       amount: Yup.number().integer().required("Campo obrigatório"),
       state: Yup.string()
         .max(10, "O limite de caracteres deve ser menor ou igual a 20.")
@@ -155,7 +157,6 @@ export function StockCreate() {
                   type="submit"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
-                  colorScheme="blue"
                 >
                   Salvar
                 </Button>

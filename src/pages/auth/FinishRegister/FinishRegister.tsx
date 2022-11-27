@@ -108,7 +108,6 @@ export const FinishRegister = () => {
                   size="lg"
                   // isLoading={isLoading}
                   loadingText="Navegando"
-                  colorScheme="blue"
                   type="submit"
                 >
                   Continuar

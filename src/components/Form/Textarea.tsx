@@ -1,30 +1,27 @@
 import {
   Icon,
-  Input as ChakraInput,
+  Textarea as ChakraTextarea,
   InputGroup,
   InputLeftElement,
-  InputProps as ChakraInputProps,
+  TextareaProps as ChakraTextareaProps,
   InputRightElement,
   Stack,
 } from "@chakra-ui/react"
-import { ElementType } from "react"
-import { RiCheckLine } from "react-icons/ri"
+import React, { ElementType } from "react"
 
-interface InputProps extends ChakraInputProps {
+interface TextareaProps extends ChakraTextareaProps {
   iconLeft?: ElementType
   iconRight?: ElementType
-  isValid?: boolean
 }
 
-export function Input({
+export function Textarea({
   name,
   title,
-  isValid,
   iconLeft: IconLeft,
   iconRight: IconRight,
   size = "lg",
   ...props
-}: InputProps) {
+}: TextareaProps) {
   return (
     <Stack spacing={4}>
       <InputGroup>
@@ -34,7 +31,9 @@ export function Input({
             children={<Icon as={IconRight} mt={2} mr={2} fontSize="22" />}
           />
         )}
-        <ChakraInput
+        <ChakraTextarea
+          id={name}
+          name={name}
           placeholder={title}
           focusBorderColor={"primary"}
           bgColor="background.100"
@@ -46,20 +45,6 @@ export function Input({
           <InputRightElement
             pointerEvents="none"
             children={<Icon as={IconRight} mt={2} mr={2} fontSize="22" />}
-          />
-        )}
-        {isValid && (
-          <InputRightElement
-            pointerEvents="none"
-            children={
-              <Icon
-                as={RiCheckLine}
-                color="green"
-                mt={2}
-                mr={2}
-                fontSize="22"
-              />
-            }
           />
         )}
       </InputGroup>

@@ -37,7 +37,9 @@ export function WorkersCreate() {
       workplace: Yup.string()
         .max(20, "O limite de caracteres deve ser menor ou igual a 20.")
         .required("Campo obrigatório"),
-      cpd: Yup.number().required("Campo obrigatório"),
+      cpd: Yup.number()
+        .required("Campo obrigatório")
+        .typeError("Campo deve ser numérico"),
     })
   }, [])
 
@@ -113,13 +115,12 @@ export function WorkersCreate() {
                 <Button
                   variant="unstyled"
                   disabled={isSubmitting}
-                  onClick={() => navigate("/users")}
+                  onClick={() => navigate("/workers")}
                 >
                   Cancelar
                 </Button>
                 <Button
                   type="submit"
-                  colorScheme="blue"
                   loadingText="Salvando"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
