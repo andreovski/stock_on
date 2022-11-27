@@ -10,7 +10,6 @@ import {
   Link as ChakraLink,
   Stack,
   Text,
-  useToast,
 } from "@chakra-ui/react"
 
 import { useAuth } from "../../context/AuthContext"
@@ -28,7 +27,7 @@ export const SignIn = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const [error, setError] = useState()
+  const [error, setError] = useState<any>()
 
   const navigate = useNavigate()
 

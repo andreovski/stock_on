@@ -1,10 +1,9 @@
 {
-  "include": ["src/**/*.ts"],
+  "include": ["src/*"],
   "exclude": ["node_modules"],
 
   "compilerOptions": {
     "target": "es5",
-    "baseUrl": ".",
     "rootDir": "./src",
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true

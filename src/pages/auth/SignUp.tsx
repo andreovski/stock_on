@@ -24,7 +24,6 @@ import * as Yup from "yup"
 import { RiArrowLeftLine } from "react-icons/ri"
 import { SectionTitle } from "../../components/SectionTitle"
 import { useMutationAuthSignUpWithCredentials } from "../../services/api"
-import { useAuth } from "../../context/AuthContext"
 
 export const SignUp: React.FC = () => {
   const navigate = useNavigate()
