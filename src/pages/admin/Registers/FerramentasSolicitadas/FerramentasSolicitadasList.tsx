@@ -24,7 +24,7 @@ import { Suspense } from "react"
 import { useQueryFerramentasSolicitadasGetFerramentasSolicitadas } from "../../../../services/api/ferramentasSolicitadas"
 import { SpinnerFull } from "../../../../components/SpinnerFull"
 import { format } from "date-fns"
-import { IFerramentasSolicitadas } from "../../../../services/api/interface/IFerramentasSolicitadas"
+import { IFerramentasSolicitadas } from "../../../../services/api/interface/iFerramentasSolicitadas"
 
 export const FerramentasSolicitadasList = () => {
   return (
