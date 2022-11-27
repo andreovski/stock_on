@@ -23,7 +23,7 @@ export function SidebarNav() {
       <SidebarNavSection title="CADASTROS">
         <SidebarNavLink link="workers" icon={RiContactsLine}>
           <Text ml="4" fontWeight="medium">
-            Usuários
+            Funcionários
           </Text>
         </SidebarNavLink>
         <SidebarNavLink link="stock" icon={RiArchiveLine}>
@@ -34,7 +34,7 @@ export function SidebarNav() {
       </SidebarNavSection>
 
       <SidebarNavSection title="FLUXOS">
-        <SidebarNavLink link="tools" icon={RiToolsLine}>
+        <SidebarNavLink link="ferramentas-solicitadas" icon={RiToolsLine}>
           <Text ml="4" fontWeight="medium">
             Ferramentas solicitadas
           </Text>

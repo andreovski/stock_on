@@ -153,7 +153,6 @@ export const SignUp: React.FC = () => {
                   <IconButton
                     aria-label="voltar"
                     variant="outline"
-                    colorScheme="blue"
                     size="lg"
                     icon={<RiArrowLeftLine size={25} />}
                     mr="4"
@@ -162,7 +161,6 @@ export const SignUp: React.FC = () => {
                   <Button
                     type="submit"
                     mt="6"
-                    colorScheme="blue"
                     size="lg"
                     isLoading={isSubmitting}
                     loadingText="Criando sua conta"

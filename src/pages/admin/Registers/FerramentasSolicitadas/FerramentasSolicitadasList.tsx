@@ -1,3 +1,4 @@
+import React from "react"
 import {
   Box,
   Button,
@@ -5,8 +6,8 @@ import {
   Heading,
   Icon,
   IconButton,
-  Spinner,
   Table,
+  Tag,
   Tbody,
   Td,
   Text,
@@ -19,41 +20,44 @@ import { RiAddLine, RiPencilFill } from "react-icons/ri"
 
 import { Pagination } from "../../../../components/Pagination"
 import { useNavigate } from "react-router-dom"
-import { memo, Suspense } from "react"
-import { useQueryWorkersGetWorkers } from "../../../../services/api/workers"
-import { IWorkers } from "../../../../services/api/interface/iWorkers"
+import { Suspense } from "react"
+import { useQueryFerramentasSolicitadasGetFerramentasSolicitadas } from "../../../../services/api/ferramentasSolicitadas"
+import { SpinnerFull } from "../../../../components/SpinnerFull"
+import { format } from "date-fns"
+import { IFerramentasSolicitadas } from "../../../../services/api/interface/IFerramentasSolicitadas"
 
-export const WorkersList = memo(() => {
+export const FerramentasSolicitadasList = () => {
   return (
-    <Suspense fallback={<Spinner color="primary" alignSelf="center" />}>
-      <WorkersListComp />
+    <Suspense fallback={<SpinnerFull />}>
+      <FerramentasSolicitadasListComp />
     </Suspense>
   )
-})
+}
 
-const WorkersListComp = () => {
+const FerramentasSolicitadasListComp = () => {
   const navigate = useNavigate()
+
+  const { data = [] } =
+    useQueryFerramentasSolicitadasGetFerramentasSolicitadas()
 
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
   })
 
-  const handleCreateWorker = () => {
-    navigate("/workers/create")
+  const handleCreateUser = () => {
+    navigate("/ferramentas-solicitadas/create")
   }
 
-  const handleEditItem = (item: IWorkers) => {
-    navigate(`/workers/edit/${item.id}`)
+  const handleEditItem = (item: IFerramentasSolicitadas) => {
+    navigate(`/ferramentas-solicitadas/edit/${item.id}`)
   }
-
-  const { data } = useQueryWorkersGetWorkers()
 
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
       <Flex mb="8" justify="space-between" align="center">
         <Heading size="lg" fontWeight="normal">
-          Funcionários
+          Ferramentas solicitadas
         </Heading>
 
         <Button
@@ -61,23 +65,23 @@ const WorkersListComp = () => {
           size="sm"
           fontSize="sm"
           leftIcon={<Icon as={RiAddLine} fontSize="20" />}
-          onClick={handleCreateWorker}
+          onClick={handleCreateUser}
         >
           Novo
         </Button>
       </Flex>
-
       <Table colorScheme="blackAlpha">
         <Thead>
           {!isWideVersion ? (
             <Tr>
-              <Th color="gray.500">Nome / Centro de custo</Th>
+              <Th color="gray.500">N˚ Sol. / Funcionário</Th>
               <Th width={8} />
             </Tr>
           ) : (
             <Tr>
-              <Th color="gray.500">Nome / Centro de custo</Th>
-              <Th color="gray.500">CPD</Th>
+              <Th color="gray.500">N˚ Sol. / Funcionário</Th>
+              <Th color="gray.500">Ferramentas</Th>
+              <Th color="gray.500">Data</Th>
               <Th width={8} />
             </Tr>
           )}
@@ -85,19 +89,35 @@ const WorkersListComp = () => {
 
         <Tbody>
           {data.map((item) => (
-            <Tr key={item.id}>
+            <Tr>
               <Td>
                 <Box>
-                  <Text fontWeight="bold">{item.name}</Text>
+                  <Text fontWeight="bold">{item.number}</Text>
                   <Text fontSize="sm" color="gray.600">
-                    {item.workplace}
+                    {item.worker.name}
                   </Text>
                 </Box>
               </Td>
 
               {isWideVersion && (
                 <Td>
-                  <Text>{item.cpd}</Text>
+                  <Flex gap={2}>
+                    {item.tools.map((tool) => (
+                      <Tag fontSize="sm" color="gray.600" isTruncated>
+                        {tool.name}
+                      </Tag>
+                    ))}
+                  </Flex>
+                </Td>
+              )}
+
+              {isWideVersion && (
+                <Td>
+                  <Box>
+                    <Text fontSize="md" color="gray.600">
+                      {item.date && format(new Date(item.date), "dd/MM/yyyy")}
+                    </Text>
+                  </Box>
                 </Td>
               )}
 

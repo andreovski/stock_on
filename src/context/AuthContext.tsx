@@ -28,7 +28,7 @@ const AuthContext = createContext({} as IAuthContextData)
 
 export function AuthProvider({ children }: IAuthContext) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [isLogging, setIsLogging] = useState(false)
+  const [isLogging, setIsLogging] = useState(true)
   const [user, setUser] = useState<any>()
 
   const navigate = useNavigate()

@@ -1,5 +1,5 @@
 {
-  "include": ["src/*", "src/services/api"],
+  "include": ["src/*", "src/services/api/*"],
   "exclude": ["node_modules"],
 
   "compilerOptions": {

@@ -100,7 +100,6 @@ export const SignIn = () => {
       >
         <Flex align="center" mb="6">
           <Button
-            colorScheme="blue"
             variant="outline"
             isFullWidth
             disabled
@@ -129,7 +128,6 @@ export const SignIn = () => {
           size="lg"
           isLoading={isLoading}
           loadingText="Entrando"
-          colorScheme="blue"
           onClick={onSubmit}
         >
           Entrar

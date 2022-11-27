@@ -60,7 +60,6 @@ const StockListComp = () => {
           as="a"
           size="sm"
           fontSize="sm"
-          colorScheme="blue"
           leftIcon={<Icon as={RiAddLine} fontSize="20" />}
           onClick={handleCreateUser}
         >
@@ -124,7 +123,6 @@ const StockListComp = () => {
                     aria-label="Editar"
                     size="sm"
                     fontSize="sm"
-                    colorScheme="blue"
                     icon={<Icon as={RiPencilFill} fontSize="20" />}
                     onClick={() => handleEditItem(item)}
                   />
