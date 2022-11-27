@@ -7,7 +7,7 @@ import {
 } from "react-query"
 import { supabase } from "../supabaseClient"
 import { IId } from "./interface"
-import { IFerramentasSolicitadas } from "./interface/IFerramentasSolicitadas"
+import { IFerramentasSolicitadas } from "./interface/iFerramentas"
 
 export const useQueryFerramentasSolicitadasGetFerramentasSolicitadas = (
   config?: UseQueryOptions
