@@ -8,6 +8,7 @@ import { useMemo } from "react"
 import { Input } from "./Input"
 import { InputSelect } from "./InputSelect"
 import { Textarea } from "./Textarea"
+import { Switch } from "./Switch"
 
 interface InputProps extends ChakraInputProps {
   title: string
@@ -28,7 +29,6 @@ export function InputForm({
 }: InputProps) {
   const { name, value } = field
   const { errors, touched, submitCount, setFieldValue } = form
-  console.log(value, name)
   const error = getIn(errors, name)
   const wasTouched = getIn(touched, name)
 
@@ -64,6 +64,8 @@ export function InputForm({
         return <Textarea {...rest} />
       case "select":
         return <InputSelect {...rest} />
+      case "switch":
+        return <Switch {...rest} />
       default:
         return <Input {...rest} />
     }
@@ -72,7 +74,6 @@ export function InputForm({
   return (
     <FormControl
       isInvalid={(!!error && !!wasTouched) || (submitCount > 0 && !!error)}
-      variant="floating"
     >
       {Component}
       <FormErrorMessage>{error}</FormErrorMessage>

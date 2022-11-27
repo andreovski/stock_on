@@ -24,6 +24,7 @@ import { Suspense } from "react"
 import { useQueryFerramentasSolicitadasGetFerramentasSolicitadas } from "../../../../services/api/ferramentasSolicitadas"
 import { SpinnerFull } from "../../../../components/SpinnerFull"
 import { format } from "date-fns"
+import { FiChevronsUp } from "react-icons/fi"
 
 export const FerramentasSolicitadasList = () => {
   return (
@@ -88,50 +89,61 @@ const FerramentasSolicitadasListComp = () => {
 
         <Tbody>
           {data.map((item) => (
-            <Tr>
-              <Td>
-                <Box>
-                  <Text fontWeight="bold">{item.number}</Text>
-                  <Text fontSize="sm" color="gray.600">
-                    {item.worker.name}
-                  </Text>
-                </Box>
-              </Td>
-
-              {isWideVersion && (
-                <Td>
-                  <Flex gap={2}>
-                    {item.tools.map((tool) => (
-                      <Tag fontSize="sm" color="gray.600" isTruncated>
-                        {tool.name}
-                      </Tag>
-                    ))}
-                  </Flex>
-                </Td>
-              )}
-
-              {isWideVersion && (
+            <React.Fragment key={item.id}>
+              <Tr>
                 <Td>
                   <Box>
-                    <Text fontSize="md" color="gray.600">
-                      {item.date && format(new Date(item.date), "dd/MM/yyyy")}
+                    <Text fontWeight="bold">{item.number}</Text>
+                    <Text fontSize="sm" color="gray.600">
+                      {item.worker.name}
                     </Text>
                   </Box>
                 </Td>
-              )}
 
-              <Td>
-                <Box>
-                  <IconButton
-                    aria-label="Editar"
-                    size="sm"
-                    fontSize="sm"
-                    icon={<Icon as={RiPencilFill} fontSize="20" />}
-                    onClick={() => handleEditItem(item)}
-                  />
-                </Box>
-              </Td>
-            </Tr>
+                {isWideVersion && (
+                  <Td>
+                    <Flex position="relative" gap={2} align="center">
+                      {item.priority && (
+                        <Icon
+                          position="absolute"
+                          left={-8}
+                          as={FiChevronsUp}
+                          fontSize="lg"
+                          color="red.600"
+                        />
+                      )}
+                      {item.tools.map((tool) => (
+                        <Tag fontSize="sm" color="gray.600" isTruncated>
+                          {tool.name}
+                        </Tag>
+                      ))}
+                    </Flex>
+                  </Td>
+                )}
+
+                {isWideVersion && (
+                  <Td>
+                    <Box>
+                      <Text fontSize="md" color="gray.600">
+                        {item.date && format(new Date(item.date), "dd/MM/yyyy")}
+                      </Text>
+                    </Box>
+                  </Td>
+                )}
+
+                <Td>
+                  <Box>
+                    <IconButton
+                      aria-label="Editar"
+                      size="sm"
+                      fontSize="sm"
+                      icon={<Icon as={RiPencilFill} fontSize="20" />}
+                      onClick={() => handleEditItem(item)}
+                    />
+                  </Box>
+                </Td>
+              </Tr>
+            </React.Fragment>
           ))}
         </Tbody>
       </Table>
