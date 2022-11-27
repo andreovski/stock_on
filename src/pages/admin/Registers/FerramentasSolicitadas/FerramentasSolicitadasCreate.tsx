@@ -1,4 +1,3 @@
-import React from "react"
 import {
   Box,
   Button,
@@ -137,9 +136,19 @@ export function FerramentasSolicitadasCreate() {
               <SimpleGrid minChildWidth="240px" spacing="8" width="100%">
                 <FieldToolsMultiselect
                   name="tools"
-                  title="MOD"
+                  title="Ferramentas"
                   component={InputForm}
                   required
+                />
+              </SimpleGrid>
+
+              <SimpleGrid minChildWidth="240px" spacing="8" width="100%">
+                <Field
+                  name="priority"
+                  title="Prioridade"
+                  type="switch"
+                  direction="row"
+                  component={InputForm}
                 />
               </SimpleGrid>
 

@@ -6,6 +6,7 @@ export interface IFerramentasSolicitadas {
   number: number
   worker: IWorkers
   tools: IStock[]
+  priority: boolean
   note: string
   date: Date
   created_at?: string
