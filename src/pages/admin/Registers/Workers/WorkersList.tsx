@@ -5,7 +5,6 @@ import {
   Heading,
   Icon,
   IconButton,
-  Spinner,
   Table,
   Tbody,
   Td,
@@ -22,10 +21,11 @@ import { useNavigate } from "react-router-dom"
 import { memo, Suspense } from "react"
 import { useQueryWorkersGetWorkers } from "../../../../services/api/workers"
 import { IWorkers } from "../../../../services/api/interface/iWorkers"
+import { SpinnerFull } from "../../../../components/SpinnerFull"
 
 export const WorkersList = memo(() => {
   return (
-    <Suspense fallback={<Spinner color="primary" alignSelf="center" />}>
+    <Suspense fallback={<SpinnerFull />}>
       <WorkersListComp />
     </Suspense>
   )

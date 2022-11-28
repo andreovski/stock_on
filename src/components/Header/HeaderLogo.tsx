@@ -12,6 +12,7 @@ export function HeaderLogo({ size = "3xl" }: IHeaderLogo) {
         fontWeight="bold"
         letterSpacing="tight"
         width="64"
+        cursor="default"
       >
         Stock
         <Text as="span" ml="1" color="primary">

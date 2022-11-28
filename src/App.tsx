@@ -5,6 +5,7 @@ import AuthRoutes from "./routes/AuthRoutes"
 import { useReactQueryConfig } from "./services/reactQueryConfig"
 
 import { SpinnerFull } from "./components/SpinnerFull"
+import { Box } from "@chakra-ui/react"
 
 function App() {
   const { isAuthenticated, isLogging } = useAuth()
@@ -22,7 +23,11 @@ function App() {
   }, [isAuthenticated, isLogging])
 
   if (isLogging) {
-    return <SpinnerFull size="lg" />
+    return (
+      <Box w="100vw" h="100vh">
+        <SpinnerFull size="lg" />
+      </Box>
+    )
   }
 
   return (

@@ -34,7 +34,7 @@ export function FerramentasSolicitadasCreate() {
 
   const lastNumberOfFerramentas = useMemo(() => {
     const item: number[] = data.map((item) => item.number)
-    return Math.max(...item) + 1 || 1
+    return item.length ? Math.max(...item) + 1 : 1
   }, [data])
 
   const validationSchema = useMemo(() => {

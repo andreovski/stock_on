@@ -79,3 +79,21 @@ export const useMutationFerramentasSolicitadasEditFerramentaSolicitada = (
     // @ts-ignore
     { ...config }
   )
+
+export const useMutationFerramentasSolicitadasDeleteFerramentaSolicitada = (
+  config?: MutateOptions
+) =>
+  useMutation(
+    `FerramentasSolicitadasDeleteFerramentaSolicitada`,
+    async (payload: IId) => {
+      const { data, error } = await supabase
+        .from("ferramentas_solicitadas")
+        .delete()
+        .match({ id: payload.id })
+
+      if (error) throw error
+      return data
+    },
+    // @ts-ignore
+    { ...config }
+  )
