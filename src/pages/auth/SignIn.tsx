@@ -111,13 +111,13 @@ export const SignIn = () => {
           <Input
             name="email"
             type="email"
-            title="E-mail"
+            placeholder="E-mail"
             onChange={(e) => setEmail(e.target.value)}
           />
           <Input
             name="password"
             type="password"
-            title="Senha"
+            placeholder="Senha"
             onChange={(e) => setPassword(e.target.value)}
           />
         </Stack>
