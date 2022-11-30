@@ -18,7 +18,7 @@ export function Sidebar() {
 
   if (isDrawerSidebar) {
     return (
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose} >
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
         <DrawerOverlay>
           <DrawerContent backgroundColor="background.100" p="4">
             <DrawerCloseButton mt="6" mr="4" />
@@ -34,7 +34,7 @@ export function Sidebar() {
   }
 
   return (
-    <Box as="aside" width="64" mr="8">
+    <Box as="aside" width="64" minW="64" mr="8">
       <SidebarNav />
     </Box>
   )

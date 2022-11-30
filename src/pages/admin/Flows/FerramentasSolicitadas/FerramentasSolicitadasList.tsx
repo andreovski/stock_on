@@ -1,3 +1,4 @@
+import React from "react"
 import {
   Box,
   Button,
@@ -8,6 +9,7 @@ import {
   Icon,
   IconButton,
   Table,
+  Tag,
   Tbody,
   Td,
   Text,
@@ -20,50 +22,49 @@ import {
 } from "@chakra-ui/react"
 import {
   RiAddLine,
-  RiContactsLine,
-  RiDeleteBin5Fill,
   RiPencilFill,
+  RiDeleteBin5Fill,
+  RiToolsLine,
 } from "react-icons/ri"
 
 import { Pagination } from "../../../../components/Pagination"
 import { useNavigate } from "react-router-dom"
-import { memo, Suspense } from "react"
+import { Suspense } from "react"
 import {
-  useMutationWorkersDeleteWorker,
-  useQueryWorkersGetWorkers,
-} from "../../../../services/api/workers"
-import { IWorkers } from "../../../../services/api/interface/iWorkers"
+  useMutationFerramentasSolicitadasDeleteItem,
+  useQueryFerramentasSolicitadasGetItems,
+} from "../../../../services/api/ferramentasSolicitadas"
 import { SpinnerFull } from "../../../../components/SpinnerFull"
+import { format } from "date-fns"
+import { FiChevronsUp } from "react-icons/fi"
 import { DeleteDialog } from "../../../../utils/deleteDialog"
 import { useQueryClient } from "react-query"
+import { IFerramentasSolicitadas } from "../../../../services/api/interface/iFerramentas"
 
-type StockListRowProps = {
-  item: IWorkers
+type FerramentasSolicitadasListRowProps = {
+  item: IFerramentasSolicitadas
   handleEditItem: any
   handleDeleteItem: any
 }
 
-export const WorkersList = memo(() => {
+export const FerramentasSolicitadasList = () => {
   return (
     <Suspense fallback={<SpinnerFull />}>
-      <WorkersListComp />
+      <FerramentasSolicitadasListComp />
     </Suspense>
   )
-})
+}
 
-const WorkersListComp = () => {
+const FerramentasSolicitadasListComp = () => {
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
   const toast = useToast()
+  const queryClient = useQueryClient()
 
-  const isWideVersion = useBreakpointValue({
-    base: false,
-    lg: true,
-  })
+  const { data = [] } = useQueryFerramentasSolicitadasGetItems()
 
-  const { mutate: handleDelete } = useMutationWorkersDeleteWorker({
+  const { mutate: handleDelete } = useMutationFerramentasSolicitadasDeleteItem({
     onSuccess: () => {
-      queryClient.refetchQueries("StockGetItems")
+      queryClient.refetchQueries("FerramentasSolicitadasGetItems")
       toast({
         title: "Solicitação deletada com sucesso.",
         status: "success",
@@ -71,30 +72,33 @@ const WorkersListComp = () => {
     },
   })
 
-  const handleCreateWorker = () => {
-    navigate("/workers/create")
+  const isWideVersion = useBreakpointValue({
+    base: false,
+    lg: true,
+  })
+
+  const handleCreateItem = () => {
+    navigate("/ferramentas-solicitadas/create")
   }
 
-  const handleEditItem = (item: IWorkers) => {
-    navigate(`/workers/edit/${item.id}`)
+  const handleEditItem = (item: any) => {
+    navigate(`/ferramentas-solicitadas/edit/${item.id}`)
   }
 
-  const handleDeleteItem = (item: IWorkers) => {
+  const handleDeleteItem = (item: any) => {
     handleDelete({ id: item.id })
   }
-
-  const { data } = useQueryWorkersGetWorkers()
 
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
       <Flex mb="8" justify="space-between" align="center">
         <Flex align="center">
-          <Icon as={RiContactsLine} fontSize="2xl" />
+          <Icon as={RiToolsLine} fontSize="2xl" />
           <Center mx={4} height="30px">
             <Divider orientation="vertical" />
           </Center>
           <Heading size="lg" fontWeight="normal">
-            Funcionários
+            Ferramentas solicitadas
           </Heading>
         </Flex>
 
@@ -103,23 +107,23 @@ const WorkersListComp = () => {
           size="sm"
           fontSize="sm"
           leftIcon={<Icon as={RiAddLine} fontSize="20" />}
-          onClick={handleCreateWorker}
+          onClick={handleCreateItem}
         >
           Novo
         </Button>
       </Flex>
-
       <Table colorScheme="blackAlpha">
         <Thead>
           {!isWideVersion ? (
             <Tr>
-              <Th color="gray.500">Nome / Centro de custo</Th>
+              <Th color="gray.500">N˚ Sol. / Funcionário</Th>
               <Th width={8} />
             </Tr>
           ) : (
             <Tr>
-              <Th color="gray.500">Nome / Centro de custo</Th>
-              <Th color="gray.500">CPD</Th>
+              <Th color="gray.500">N˚ Sol. / Funcionário</Th>
+              <Th color="gray.500">Ferramentas</Th>
+              <Th color="gray.500">Data</Th>
               <Th width={8} />
             </Tr>
           )}
@@ -127,7 +131,7 @@ const WorkersListComp = () => {
 
         <Tbody>
           {data.map((item) => (
-            <WorkersListRow
+            <FerramentasSolicitadasListRow
               key={item.id}
               item={item}
               handleEditItem={handleEditItem}
@@ -142,11 +146,11 @@ const WorkersListComp = () => {
   )
 }
 
-const WorkersListRow = ({
+const FerramentasSolicitadasListRow = ({
   item,
   handleEditItem,
   handleDeleteItem,
-}: StockListRowProps) => {
+}: FerramentasSolicitadasListRowProps) => {
   const deleteDialog = useDisclosure()
 
   const isWideVersion = useBreakpointValue({
@@ -158,16 +162,41 @@ const WorkersListRow = ({
     <Tr>
       <Td>
         <Box>
-          <Text fontWeight="bold">{item.name}</Text>
+          <Text fontWeight="bold">{item.number}</Text>
           <Text fontSize="sm" color="gray.600">
-            {item.workplace}
+            {item.worker.name}
           </Text>
         </Box>
       </Td>
 
       {isWideVersion && (
         <Td>
-          <Text>{item.cpd}</Text>
+          <Flex position="relative" gap={2} align="center">
+            {item.priority && (
+              <Icon
+                position="absolute"
+                left={-8}
+                as={FiChevronsUp}
+                fontSize="lg"
+                color="red.600"
+              />
+            )}
+            {item.tools.map((tool) => (
+              <Tag fontSize="sm" color="gray.600" isTruncated>
+                {tool.name}
+              </Tag>
+            ))}
+          </Flex>
+        </Td>
+      )}
+
+      {isWideVersion && (
+        <Td>
+          <Box>
+            <Text fontSize="md" color="gray.600">
+              {item.date && format(new Date(item.date), "dd/MM/yyyy")}
+            </Text>
+          </Box>
         </Td>
       )}
 

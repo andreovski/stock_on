@@ -1,4 +1,3 @@
-import React, { Suspense, useCallback } from "react"
 import {
   Box,
   Button,
@@ -11,33 +10,31 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import * as Yup from "yup"
-import { useMemo } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useCallback, useMemo } from "react"
+import { useNavigate } from "react-router-dom"
 import { InputForm } from "../../../../components/Form/InputForm"
+import { FieldWorkers } from "../../../../components/Fields/FieldWorkers"
+import { FieldToolsMultiselect } from "../../../../components/Fields/FieldToolsMultiselect"
 import { SectionTitle } from "../../../../components/SectionTitle"
 import { Field, Form, Formik } from "formik"
 import { useQueryClient } from "react-query"
-import { SpinnerFull } from "../../../../components/SpinnerFull"
 import {
-  useMutationFerramentasSolicitadasEditFerramentaSolicitada,
-  useQueryFerramentasSolicitadasGetFerramentaSolicitadaById,
+  useMutationFerramentasSolicitadasInsertItem,
+  useQueryFerramentasSolicitadasGetItems,
 } from "../../../../services/api/ferramentasSolicitadas"
-import { FieldWorkers } from "../../../../components/Fields/FieldWorkers"
-import { FieldToolsMultiselect } from "../../../../components/Fields/FieldToolsMultiselect"
+import { format } from "date-fns"
 
-export function FerramentasSolicitadasEdit() {
-  return (
-    <Suspense fallback={<SpinnerFull size="lg" />}>
-      <FerramentasSolicitadasEditComp />
-    </Suspense>
-  )
-}
-
-export function FerramentasSolicitadasEditComp() {
+export function FerramentasSolicitadasCreate() {
   const navigate = useNavigate()
   const toast = useToast()
   const queryClient = useQueryClient()
-  const { id }: any = useParams<string>()
+
+  const { data = [] } = useQueryFerramentasSolicitadasGetItems()
+
+  const lastNumberOfFerramentas = useMemo(() => {
+    const item: number[] = data.map((item) => item.number)
+    return item.length ? Math.max(...item) + 1 : 1
+  }, [data])
 
   const validationSchema = useMemo(() => {
     return Yup.object({
@@ -49,18 +46,9 @@ export function FerramentasSolicitadasEditComp() {
     })
   }, [])
 
-  const { data } = useQueryFerramentasSolicitadasGetFerramentaSolicitadaById({
-    id,
-  })
-
-  const { mutate } = useMutationFerramentasSolicitadasEditFerramentaSolicitada({
+  const { mutate } = useMutationFerramentasSolicitadasInsertItem({
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        "FerramentasSolicitadasGetFerramentasSolicitadas",
-      ])
-      queryClient.invalidateQueries([
-        `FerramentasSolicitadasGetFerramentaSolicitadaById/${id}`,
-      ])
+      queryClient.invalidateQueries(["FerramentasSolicitadasGetItems"])
     },
   })
 
@@ -93,19 +81,15 @@ export function FerramentasSolicitadasEditComp() {
     [toast, navigate, mutate]
   )
 
-  const initialValues = {
-    ...data,
-    worker: {
-      label: data.worker.name,
-      value: data.worker,
-    },
-    tools: data.tools.map((value) => ({ label: value.name, value })),
+  const initialValue = {
+    number: lastNumberOfFerramentas,
+    date: format(new Date(), "yyyy-MM-dd"),
   }
 
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
       <Heading size="lg" fontWeight="normal" color="font">
-        Editar solicitação de ferramenta
+        Nova solicitação de ferramenta
       </Heading>
 
       <Divider my="6" borderColor="gray.400" />
@@ -114,7 +98,7 @@ export function FerramentasSolicitadasEditComp() {
 
       <Formik
         onSubmit={onSubmit}
-        initialValues={initialValues}
+        initialValues={initialValue}
         validationSchema={validationSchema}
         validateOnBlur={false}
       >

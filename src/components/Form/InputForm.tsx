@@ -32,10 +32,6 @@ export function InputForm({
   const error = getIn(errors, name)
   const wasTouched = getIn(touched, name)
 
-  const titleValidated = useMemo(() => {
-    return !required ? title : title.concat(" *")
-  }, [title, required])
-
   const isValid = useMemo(() => {
     if (validateFieldIndicator && !error && value?.length > 3) {
       return true
@@ -48,14 +44,16 @@ export function InputForm({
     () => ({
       id: name,
       name,
-      placeholder: titleValidated,
       isValid,
       type,
+      title,
       setFieldValue,
+      isDefault: false,
       ...field,
       ...props,
+      placeholder: " ",
     }),
-    [field, isValid, name, props, setFieldValue, titleValidated, type]
+    [field, isValid, name, props, setFieldValue, title, type]
   )
 
   const Component = useMemo(() => {
@@ -73,6 +71,8 @@ export function InputForm({
 
   return (
     <FormControl
+      variant="floating"
+      isRequired={required}
       isInvalid={(!!error && !!wasTouched) || (submitCount > 0 && !!error)}
     >
       {Component}

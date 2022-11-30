@@ -11,9 +11,9 @@ import { StockCreate } from "../pages/admin/Registers/Stock/StockCreate"
 import { StockEdit } from "../pages/admin/Registers/Stock/StockEdit"
 import { WorkersEdit } from "../pages/admin/Registers/Workers/WorkersEdit"
 import { FinishRegister } from "../pages/auth/FinishRegister/FinishRegister"
-import { FerramentasSolicitadasEdit } from "../pages/admin/Registers/FerramentasSolicitadas/FerramentasSolicitadasEdit"
-import { FerramentasSolicitadasList } from "../pages/admin/Registers/FerramentasSolicitadas/FerramentasSolicitadasList"
-import { FerramentasSolicitadasCreate } from "../pages/admin/Registers/FerramentasSolicitadas/FerramentasSolicitadasCreate"
+import { FerramentasSolicitadasEdit } from "../pages/admin/Flows/FerramentasSolicitadas/FerramentasSolicitadasEdit"
+import { FerramentasSolicitadasList } from "../pages/admin/Flows/FerramentasSolicitadas/FerramentasSolicitadasList"
+import { FerramentasSolicitadasCreate } from "../pages/admin/Flows/FerramentasSolicitadas/FerramentasSolicitadasCreate"
 
 export default function AppRoutes() {
   return (

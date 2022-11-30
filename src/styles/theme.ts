@@ -1,5 +1,6 @@
 import { extendTheme, withDefaultColorScheme } from "@chakra-ui/react"
 import Form from "./form"
+import dividerTheme from "./divider"
 
 export const theme = extendTheme(
   {
@@ -29,7 +30,17 @@ export const theme = extendTheme(
     },
 
     components: {
+      Divider: dividerTheme,
       Form,
+      Input: {
+        variants: {
+          filled: {
+            field: {
+              height: "3.4rem",
+            },
+          },
+        },
+      },
       Button: {
         baseStyle: {
           _disabled: {
