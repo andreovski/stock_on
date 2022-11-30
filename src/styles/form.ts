@@ -4,7 +4,7 @@ import { theme } from "@chakra-ui/react"
 const activeLabelStyles = {
   transform: "scale(0.85) translateY(-12px) translateX(-6px)",
   fontSize: "12px",
-  color: theme.colors.blackAlpha[500],
+  color: theme.colors.gray[400],
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -28,7 +28,8 @@ export default {
           left: 0,
           zIndex: 2,
           position: "absolute",
-          color: theme.colors.blackAlpha[500],
+          color: theme.colors.gray[400],
+          fontSize: theme.fontSizes.lg,
           fontWeight: "300",
           backgroundColor: "transparent",
           pointerEvents: "none",

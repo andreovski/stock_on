@@ -1,4 +1,5 @@
 import { SelectProps as ChakraSelectProps, Stack } from "@chakra-ui/react"
+import styled from "@emotion/styled"
 import { Select } from "chakra-react-select"
 import { FormikHelpers } from "formik"
 import { ElementType } from "react"
@@ -8,6 +9,12 @@ type SelectProps = ChakraSelectProps &
     iconLeft?: ElementType
     options: any
   }
+
+const SelectStyled = styled(Select)`
+  > div:first-of-type {
+    height: 3.4rem;
+  }
+`
 
 export function InputSelect({
   name,
@@ -21,7 +28,7 @@ export function InputSelect({
 }: SelectProps) {
   return (
     <Stack spacing={4}>
-      <Select
+      <SelectStyled
         id={name}
         name={name}
         placeholder={title}
@@ -34,6 +41,7 @@ export function InputSelect({
         //@ts-ignore
         variant="filled"
         size="lg"
+        style={{ height: "200px" }}
         {...props}
       />
     </Stack>

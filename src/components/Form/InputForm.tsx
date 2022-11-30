@@ -32,6 +32,8 @@ export function InputForm({
   const error = getIn(errors, name)
   const wasTouched = getIn(touched, name)
 
+  const placeholder = type === "select" ? title : " "
+
   const isValid = useMemo(() => {
     if (validateFieldIndicator && !error && value?.length > 3) {
       return true
@@ -51,7 +53,7 @@ export function InputForm({
       isDefault: false,
       ...field,
       ...props,
-      placeholder: " ",
+      placeholder,
     }),
     [field, isValid, name, props, setFieldValue, title, type]
   )
@@ -71,7 +73,7 @@ export function InputForm({
 
   return (
     <FormControl
-      variant="floating"
+      variant={type !== "switch" ? "floating" : undefined}
       isRequired={required}
       isInvalid={(!!error && !!wasTouched) || (submitCount > 0 && !!error)}
     >

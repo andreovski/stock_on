@@ -34,6 +34,7 @@ export function Input({
         {IconLeft && (
           <InputLeftElement
             pointerEvents="none"
+            paddingTop={!isDefault ? 2 : undefined}
             children={<Icon as={IconRight} mt={2} mr={2} fontSize="22" />}
           />
         )}
@@ -49,12 +50,14 @@ export function Input({
         {IconRight && (
           <InputRightElement
             pointerEvents="none"
+            paddingTop={!isDefault ? 2 : undefined}
             children={<Icon as={IconRight} mt={2} mr={2} fontSize="22" />}
           />
         )}
         {isValid && (
           <InputRightElement
             pointerEvents="none"
+            paddingTop={!isDefault ? 2 : undefined}
             children={
               <Icon
                 as={RiCheckLine}
