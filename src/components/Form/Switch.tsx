@@ -1,6 +1,5 @@
 import React from "react"
 import {
-  Box,
   Flex,
   FormLabel,
   Switch as ChakraSwitch,
@@ -12,6 +11,7 @@ type IProps = SwitchProps & {
 }
 
 export const Switch = ({
+  title,
   placeholder,
   direction = "column",
   ...props
@@ -24,14 +24,14 @@ export const Switch = ({
       alignItems={direction === "row" ? "center" : "flex-start"}
     >
       {direction === "column" && (
-        <FormLabel htmlFor={props.name} fontSize="lg" color="GrayText">
-          {placeholder}
+        <FormLabel htmlFor={props.name} fontSize="lg" color="gray.500">
+          {title}
         </FormLabel>
       )}
       <ChakraSwitch id={props.name} {...props} />
       {direction === "row" && (
-        <FormLabel pt="6px" fontSize="lg" color="GrayText">
-          {placeholder}
+        <FormLabel pt="6px" fontSize="lg" color="gray.500">
+          {title}
         </FormLabel>
       )}
     </Flex>
