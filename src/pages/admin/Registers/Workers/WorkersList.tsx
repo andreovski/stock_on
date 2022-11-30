@@ -1,6 +1,8 @@
 import {
   Box,
   Button,
+  Center,
+  Divider,
   Flex,
   Heading,
   Icon,
@@ -13,15 +15,33 @@ import {
   Thead,
   Tr,
   useBreakpointValue,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react"
-import { RiAddLine, RiPencilFill } from "react-icons/ri"
+import {
+  RiAddLine,
+  RiContactsLine,
+  RiDeleteBin5Fill,
+  RiPencilFill,
+} from "react-icons/ri"
 
 import { Pagination } from "../../../../components/Pagination"
 import { useNavigate } from "react-router-dom"
 import { memo, Suspense } from "react"
-import { useQueryWorkersGetWorkers } from "../../../../services/api/workers"
+import {
+  useMutationWorkersDeleteWorker,
+  useQueryWorkersGetWorkers,
+} from "../../../../services/api/workers"
 import { IWorkers } from "../../../../services/api/interface/iWorkers"
 import { SpinnerFull } from "../../../../components/SpinnerFull"
+import { DeleteDialog } from "../../../../utils/deleteDialog"
+import { useQueryClient } from "react-query"
+
+type StockListRowProps = {
+  item: IWorkers
+  handleEditItem: any
+  handleDeleteItem: any
+}
 
 export const WorkersList = memo(() => {
   return (
@@ -33,10 +53,22 @@ export const WorkersList = memo(() => {
 
 const WorkersListComp = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const toast = useToast()
 
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
+  })
+
+  const { mutate: handleDelete } = useMutationWorkersDeleteWorker({
+    onSuccess: () => {
+      queryClient.refetchQueries("StockGetItems")
+      toast({
+        title: "Solicitação deletada com sucesso.",
+        status: "success",
+      })
+    },
   })
 
   const handleCreateWorker = () => {
@@ -47,14 +79,24 @@ const WorkersListComp = () => {
     navigate(`/workers/edit/${item.id}`)
   }
 
+  const handleDeleteItem = (item: IWorkers) => {
+    handleDelete({ id: item.id })
+  }
+
   const { data } = useQueryWorkersGetWorkers()
 
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
       <Flex mb="8" justify="space-between" align="center">
-        <Heading size="lg" fontWeight="normal">
-          Funcionários
-        </Heading>
+        <Flex align="center">
+          <Icon as={RiContactsLine} fontSize="2xl" />
+          <Center mx={4} height="30px">
+            <Divider orientation="vertical" />
+          </Center>
+          <Heading size="lg" fontWeight="normal">
+            Funcionários
+          </Heading>
+        </Flex>
 
         <Button
           as="a"
@@ -85,39 +127,85 @@ const WorkersListComp = () => {
 
         <Tbody>
           {data.map((item) => (
-            <Tr key={item.id}>
-              <Td>
-                <Box>
-                  <Text fontWeight="bold">{item.name}</Text>
-                  <Text fontSize="sm" color="gray.600">
-                    {item.workplace}
-                  </Text>
-                </Box>
-              </Td>
-
-              {isWideVersion && (
-                <Td>
-                  <Text>{item.cpd}</Text>
-                </Td>
-              )}
-
-              <Td>
-                <Box>
-                  <IconButton
-                    aria-label="Editar"
-                    size="sm"
-                    fontSize="sm"
-                    icon={<Icon as={RiPencilFill} fontSize="20" />}
-                    onClick={() => handleEditItem(item)}
-                  />
-                </Box>
-              </Td>
-            </Tr>
+            <WorkersListRow
+              key={item.id}
+              item={item}
+              handleEditItem={handleEditItem}
+              handleDeleteItem={handleDeleteItem}
+            />
           ))}
         </Tbody>
       </Table>
 
       <Pagination />
     </Box>
+  )
+}
+
+const WorkersListRow = ({
+  item,
+  handleEditItem,
+  handleDeleteItem,
+}: StockListRowProps) => {
+  const deleteDialog = useDisclosure()
+
+  const isWideVersion = useBreakpointValue({
+    base: false,
+    lg: true,
+  })
+
+  return (
+    <Tr>
+      <Td>
+        <Box>
+          <Text fontWeight="bold">{item.name}</Text>
+          <Text fontSize="sm" color="gray.600">
+            {item.workplace}
+          </Text>
+        </Box>
+      </Td>
+
+      {isWideVersion && (
+        <Td>
+          <Text>{item.cpd}</Text>
+        </Td>
+      )}
+
+      <Td>
+        <Flex gap={2}>
+          <IconButton
+            aria-label="Editar"
+            variant="ghost"
+            size="sm"
+            fontSize="sm"
+            icon={<Icon as={RiPencilFill} fontSize="20" />}
+            onClick={() => handleEditItem(item)}
+          />
+          <IconButton
+            aria-label="Deletar"
+            variant="ghost"
+            size="sm"
+            fontSize="sm"
+            icon={
+              <Icon
+                as={RiDeleteBin5Fill}
+                fontSize="20"
+                _hover={{
+                  color: "red.600",
+                }}
+              />
+            }
+            onClick={() => deleteDialog.onOpen()}
+          />
+
+          <DeleteDialog
+            title="Deletar registro"
+            content="Tem certeza que deseja deletar o registro selecionado?"
+            onDelete={() => handleDeleteItem(item)}
+            {...deleteDialog}
+          />
+        </Flex>
+      </Td>
+    </Tr>
   )
 }

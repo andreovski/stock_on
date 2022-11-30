@@ -9,11 +9,11 @@ import { supabase } from "../supabaseClient"
 import { IId } from "./interface"
 import { IFerramentasSolicitadas } from "./interface/iFerramentas"
 
-export const useQueryFerramentasSolicitadasGetFerramentasSolicitadas = (
+export const useQueryFerramentasSolicitadasGetItems = (
   config?: UseQueryOptions
 ) =>
   useQuery(
-    `FerramentasSolicitadasGetFerramentasSolicitadas`,
+    `FerramentasSolicitadasGetItems`,
     async () => {
       const { data, error } = await supabase
         .from<IFerramentasSolicitadas>("ferramentas_solicitadas")
@@ -25,12 +25,12 @@ export const useQueryFerramentasSolicitadasGetFerramentasSolicitadas = (
     { ...config }
   ) as UseQueryResult<IFerramentasSolicitadas[]>
 
-export const useQueryFerramentasSolicitadasGetFerramentaSolicitadaById = (
+export const useQueryFerramentasSolicitadasGetItemById = (
   { id }: IId,
   config?: UseQueryOptions
 ) =>
   useQuery(
-    `FerramentasSolicitadasGetFerramentaSolicitadaById/${id}`,
+    `FerramentasSolicitadasGetItemById/${id}`,
     async () => {
       const { data, error } = await supabase
         .from<IFerramentasSolicitadas>("ferramentas_solicitadas")
@@ -44,11 +44,11 @@ export const useQueryFerramentasSolicitadasGetFerramentaSolicitadaById = (
     { ...config }
   ) as UseQueryResult<IFerramentasSolicitadas>
 
-export const useMutationFerramentasSolicitadasInsertFerramentaSolicitada = (
+export const useMutationFerramentasSolicitadasInsertItem = (
   config?: MutateOptions
 ) =>
   useMutation(
-    `FerramentasSolicitadasInsertFerramentaSolicitada`,
+    `FerramentasSolicitadasInsertItem`,
     async (payload?: Omit<IFerramentasSolicitadas, "id">) => {
       const { data, error } = await supabase
         .from("ferramentas_solicitadas")
@@ -62,11 +62,11 @@ export const useMutationFerramentasSolicitadasInsertFerramentaSolicitada = (
     { ...config }
   )
 
-export const useMutationFerramentasSolicitadasEditFerramentaSolicitada = (
+export const useMutationFerramentasSolicitadasEditItem = (
   config?: MutateOptions
 ) =>
   useMutation(
-    `FerramentasSolicitadasEditFerramentaSolicitada`,
+    `FerramentasSolicitadasEditItem`,
     async (payload?: IFerramentasSolicitadas) => {
       const { data, error } = await supabase
         .from("ferramentas_solicitadas")
@@ -80,11 +80,11 @@ export const useMutationFerramentasSolicitadasEditFerramentaSolicitada = (
     { ...config }
   )
 
-export const useMutationFerramentasSolicitadasDeleteFerramentaSolicitada = (
+export const useMutationFerramentasSolicitadasDeleteItem = (
   config?: MutateOptions
 ) =>
   useMutation(
-    `FerramentasSolicitadasDeleteFerramentaSolicitada`,
+    `FerramentasSolicitadasDeleteItem`,
     async (payload: IId) => {
       const { data, error } = await supabase
         .from("ferramentas_solicitadas")

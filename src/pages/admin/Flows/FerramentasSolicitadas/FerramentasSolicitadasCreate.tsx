@@ -19,8 +19,8 @@ import { SectionTitle } from "../../../../components/SectionTitle"
 import { Field, Form, Formik } from "formik"
 import { useQueryClient } from "react-query"
 import {
-  useMutationFerramentasSolicitadasInsertFerramentaSolicitada,
-  useQueryFerramentasSolicitadasGetFerramentasSolicitadas,
+  useMutationFerramentasSolicitadasInsertItem,
+  useQueryFerramentasSolicitadasGetItems,
 } from "../../../../services/api/ferramentasSolicitadas"
 import { format } from "date-fns"
 
@@ -29,8 +29,7 @@ export function FerramentasSolicitadasCreate() {
   const toast = useToast()
   const queryClient = useQueryClient()
 
-  const { data = [] } =
-    useQueryFerramentasSolicitadasGetFerramentasSolicitadas()
+  const { data = [] } = useQueryFerramentasSolicitadasGetItems()
 
   const lastNumberOfFerramentas = useMemo(() => {
     const item: number[] = data.map((item) => item.number)
@@ -47,14 +46,11 @@ export function FerramentasSolicitadasCreate() {
     })
   }, [])
 
-  const { mutate } =
-    useMutationFerramentasSolicitadasInsertFerramentaSolicitada({
-      onSuccess: () => {
-        queryClient.invalidateQueries([
-          "FerramentasSolicitadasGetFerramentasSolicitadas",
-        ])
-      },
-    })
+  const { mutate } = useMutationFerramentasSolicitadasInsertItem({
+    onSuccess: () => {
+      queryClient.invalidateQueries(["FerramentasSolicitadasGetItems"])
+    },
+  })
 
   const onSubmit = useCallback(
     (values, formik) => {

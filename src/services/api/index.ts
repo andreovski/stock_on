@@ -8,7 +8,7 @@ import {
 } from "react-query"
 import { signIn } from "../../providers/auth"
 import { supabase } from "../supabaseClient"
-import { IUserById } from "./interface"
+import { IId, IUserById } from "./interface"
 import { IStock, IStockGetItemById } from "./interface/iStock"
 
 export const useMutationAuthSignInWithCredentials = (
@@ -74,7 +74,7 @@ export const useQueryUserGetUserById = (
 
 export const useQueryStockGetItems = (config?: UseQueryOptions) =>
   useQuery(
-    `stockGetItems`,
+    `StockGetItems`,
     async () => {
       const { data, error } = await supabase.from<IStock>("stock").select("*")
 
@@ -89,7 +89,7 @@ export const useQueryStockGetItemById = (
   config?: UseQueryOptions
 ) =>
   useQuery(
-    `stockGetItemsById/${id}`,
+    `StockGetItemsById/${id}`,
     async () => {
       const { data, error } = await supabase
         .from<IStock>("stock")
@@ -105,7 +105,7 @@ export const useQueryStockGetItemById = (
 
 export const useMutationStockInsertItem = (config?: MutateOptions) =>
   useMutation(
-    `stockInsertItem`,
+    `StockInsertItem`,
     async (payload?: Omit<IStock, "id">) => {
       const { data, error } = await supabase
         .from("stock")
@@ -121,11 +121,27 @@ export const useMutationStockInsertItem = (config?: MutateOptions) =>
 
 export const useMutationStockEditItem = (config?: MutateOptions) =>
   useMutation(
-    `stockInsertItem`,
+    `StockInsertItem`,
     async (payload?: IStock) => {
       const { data, error } = await supabase
         .from("stock")
         .update(payload)
+        .match({ id: payload.id })
+
+      if (error) throw error
+      return data
+    },
+    // @ts-ignore
+    { ...config }
+  )
+
+export const useMutationStockDeleteItem = (config?: MutateOptions) =>
+  useMutation(
+    `StockDeleteItem`,
+    async (payload: IId) => {
+      const { data, error } = await supabase
+        .from("stock")
+        .delete()
         .match({ id: payload.id })
 
       if (error) throw error

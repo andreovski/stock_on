@@ -1,6 +1,8 @@
 import {
   Box,
   Button,
+  Center,
+  Divider,
   Flex,
   Heading,
   Icon,
@@ -13,15 +15,33 @@ import {
   Thead,
   Tr,
   useBreakpointValue,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react"
-import { RiAddLine, RiPencilFill } from "react-icons/ri"
+import {
+  RiAddLine,
+  RiArchiveLine,
+  RiDeleteBin5Fill,
+  RiPencilFill,
+} from "react-icons/ri"
 
 import { Pagination } from "../../../../components/Pagination"
 import { useNavigate } from "react-router-dom"
 import { Suspense } from "react"
-import { useQueryStockGetItems } from "../../../../services/api"
+import {
+  useMutationStockDeleteItem,
+  useQueryStockGetItems,
+} from "../../../../services/api"
 import { SpinnerFull } from "../../../../components/SpinnerFull"
 import { IStock } from "../../../../services/api/interface/iStock"
+import { DeleteDialog } from "../../../../utils/deleteDialog"
+import { useQueryClient } from "react-query"
+
+type StockListRowProps = {
+  item: IStock
+  handleEditItem: any
+  handleDeleteItem: any
+}
 
 export const StockList = () => {
   return (
@@ -33,8 +53,20 @@ export const StockList = () => {
 
 const StockListComp = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const toast = useToast()
 
   const { data = [] } = useQueryStockGetItems()
+
+  const { mutate: handleDelete } = useMutationStockDeleteItem({
+    onSuccess: () => {
+      queryClient.refetchQueries("StockGetItems")
+      toast({
+        title: "Solicitação deletada com sucesso.",
+        status: "success",
+      })
+    },
+  })
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -49,12 +81,22 @@ const StockListComp = () => {
     navigate(`/stock/edit/${item.id}`)
   }
 
+  const handleDeleteItem = (item: any) => {
+    handleDelete({ id: item.id })
+  }
+
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
       <Flex mb="8" justify="space-between" align="center">
-        <Heading size="lg" fontWeight="normal">
-          Estoque
-        </Heading>
+        <Flex align="center">
+          <Icon as={RiArchiveLine} fontSize="2xl" />
+          <Center mx={4} height="30px">
+            <Divider orientation="vertical" />
+          </Center>
+          <Heading size="lg" fontWeight="normal">
+            Estoque
+          </Heading>
+        </Flex>
 
         <Button
           as="a"
@@ -85,55 +127,101 @@ const StockListComp = () => {
 
         <Tbody>
           {data.map((item: IStock) => (
-            <Tr>
-              <Td>
-                <Box>
-                  <Text fontWeight="bold">{item.name}</Text>
-                  <Text fontSize="sm" color="gray.600">
-                    {item.mod}
-                  </Text>
-                </Box>
-              </Td>
-
-              {isWideVersion && (
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">{item.size}</Text>
-                    <Text fontSize="sm" color="gray.600">
-                      {item.state}
-                    </Text>
-                  </Box>
-                </Td>
-              )}
-
-              {isWideVersion && (
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">{item.amount}</Text>
-                    <Text fontSize="sm" color="gray.600">
-                      {item.locate}
-                    </Text>
-                  </Box>
-                </Td>
-              )}
-
-              <Td>
-                <Box>
-                  <IconButton
-                    aria-label="Editar"
-                    size="sm"
-                    fontSize="sm"
-                    icon={<Icon as={RiPencilFill} fontSize="20" />}
-                    onClick={() => handleEditItem(item)}
-                  />
-                </Box>
-              </Td>
-            </Tr>
+            <StockListRow
+              key={item.id}
+              item={item}
+              handleEditItem={handleEditItem}
+              handleDeleteItem={handleDeleteItem}
+            />
           ))}
         </Tbody>
       </Table>
 
       <Pagination />
     </Box>
+  )
+}
+
+const StockListRow = ({
+  item,
+  handleEditItem,
+  handleDeleteItem,
+}: StockListRowProps) => {
+  const deleteDialog = useDisclosure()
+
+  const isWideVersion = useBreakpointValue({
+    base: false,
+    lg: true,
+  })
+
+  return (
+    <Tr>
+      <Td>
+        <Box>
+          <Text fontWeight="bold">{item.name}</Text>
+          <Text fontSize="sm" color="gray.600">
+            {item.mod}
+          </Text>
+        </Box>
+      </Td>
+
+      {isWideVersion && (
+        <Td>
+          <Box>
+            <Text fontWeight="bold">{item.size}</Text>
+            <Text fontSize="sm" color="gray.600">
+              {item.state}
+            </Text>
+          </Box>
+        </Td>
+      )}
+
+      {isWideVersion && (
+        <Td>
+          <Box>
+            <Text fontWeight="bold">{item.amount}</Text>
+            <Text fontSize="sm" color="gray.600">
+              {item.locate}
+            </Text>
+          </Box>
+        </Td>
+      )}
+
+      <Td>
+        <Flex gap={2}>
+          <IconButton
+            aria-label="Editar"
+            variant="ghost"
+            size="sm"
+            fontSize="sm"
+            icon={<Icon as={RiPencilFill} fontSize="20" />}
+            onClick={() => handleEditItem(item)}
+          />
+          <IconButton
+            aria-label="Deletar"
+            variant="ghost"
+            size="sm"
+            fontSize="sm"
+            icon={
+              <Icon
+                as={RiDeleteBin5Fill}
+                fontSize="20"
+                _hover={{
+                  color: "red.600",
+                }}
+              />
+            }
+            onClick={() => deleteDialog.onOpen()}
+          />
+
+          <DeleteDialog
+            title="Deletar registro"
+            content="Tem certeza que deseja deletar o registro selecionado?"
+            onDelete={() => handleDeleteItem(item)}
+            {...deleteDialog}
+          />
+        </Flex>
+      </Td>
+    </Tr>
   )
 }

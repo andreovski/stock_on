@@ -19,8 +19,8 @@ import { Field, Form, Formik } from "formik"
 import { useQueryClient } from "react-query"
 import { SpinnerFull } from "../../../../components/SpinnerFull"
 import {
-  useMutationFerramentasSolicitadasEditFerramentaSolicitada,
-  useQueryFerramentasSolicitadasGetFerramentaSolicitadaById,
+  useMutationFerramentasSolicitadasEditItem,
+  useQueryFerramentasSolicitadasGetItemById,
 } from "../../../../services/api/ferramentasSolicitadas"
 import { FieldWorkers } from "../../../../components/Fields/FieldWorkers"
 import { FieldToolsMultiselect } from "../../../../components/Fields/FieldToolsMultiselect"
@@ -49,18 +49,14 @@ export function FerramentasSolicitadasEditComp() {
     })
   }, [])
 
-  const { data } = useQueryFerramentasSolicitadasGetFerramentaSolicitadaById({
+  const { data } = useQueryFerramentasSolicitadasGetItemById({
     id,
   })
 
-  const { mutate } = useMutationFerramentasSolicitadasEditFerramentaSolicitada({
+  const { mutate } = useMutationFerramentasSolicitadasEditItem({
     onSuccess: () => {
-      queryClient.invalidateQueries([
-        "FerramentasSolicitadasGetFerramentasSolicitadas",
-      ])
-      queryClient.invalidateQueries([
-        `FerramentasSolicitadasGetFerramentaSolicitadaById/${id}`,
-      ])
+      queryClient.invalidateQueries(["FerramentasSolicitadasGetItems"])
+      queryClient.invalidateQueries([`FerramentasSolicitadasGetItemById/${id}`])
     },
   })
 

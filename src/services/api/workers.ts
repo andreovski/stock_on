@@ -73,3 +73,19 @@ export const useMutationWorkersEditWorker = (config?: MutateOptions) =>
     // @ts-ignore
     { ...config }
   )
+
+export const useMutationWorkersDeleteWorker = (config?: MutateOptions) =>
+  useMutation(
+    `WorkersDeleteWorker`,
+    async (payload: IId) => {
+      const { data, error } = await supabase
+        .from("workers")
+        .delete()
+        .match({ id: payload.id })
+
+      if (error) throw error
+      return data
+    },
+    // @ts-ignore
+    { ...config }
+  )

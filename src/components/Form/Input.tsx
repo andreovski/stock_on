@@ -1,4 +1,5 @@
 import {
+  FormLabel,
   Icon,
   Input as ChakraInput,
   InputGroup,
@@ -14,6 +15,7 @@ interface InputProps extends ChakraInputProps {
   iconLeft?: ElementType
   iconRight?: ElementType
   isValid?: boolean
+  isDefault?: boolean
 }
 
 export function Input({
@@ -23,6 +25,7 @@ export function Input({
   iconLeft: IconLeft,
   iconRight: IconRight,
   size = "lg",
+  isDefault = true,
   ...props
 }: InputProps) {
   return (
@@ -35,13 +38,14 @@ export function Input({
           />
         )}
         <ChakraInput
-          placeholder={title}
           focusBorderColor={"primary"}
+          paddingTop={!isDefault ? 3 : undefined}
           bgColor="background.100"
           variant="filled"
           size="lg"
           {...props}
         />
+        {!isDefault && <FormLabel>{title}</FormLabel>}
         {IconRight && (
           <InputRightElement
             pointerEvents="none"

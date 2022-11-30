@@ -2,6 +2,8 @@ import React from "react"
 import {
   Box,
   Button,
+  Center,
+  Divider,
   Flex,
   Heading,
   Icon,
@@ -18,14 +20,19 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react"
-import { RiAddLine, RiPencilFill, RiDeleteBin5Fill } from "react-icons/ri"
+import {
+  RiAddLine,
+  RiPencilFill,
+  RiDeleteBin5Fill,
+  RiToolsLine,
+} from "react-icons/ri"
 
 import { Pagination } from "../../../../components/Pagination"
 import { useNavigate } from "react-router-dom"
 import { Suspense } from "react"
 import {
-  useMutationFerramentasSolicitadasDeleteFerramentaSolicitada,
-  useQueryFerramentasSolicitadasGetFerramentasSolicitadas,
+  useMutationFerramentasSolicitadasDeleteItem,
+  useQueryFerramentasSolicitadasGetItems,
 } from "../../../../services/api/ferramentasSolicitadas"
 import { SpinnerFull } from "../../../../components/SpinnerFull"
 import { format } from "date-fns"
@@ -53,21 +60,17 @@ const FerramentasSolicitadasListComp = () => {
   const toast = useToast()
   const queryClient = useQueryClient()
 
-  const { data = [] } =
-    useQueryFerramentasSolicitadasGetFerramentasSolicitadas()
+  const { data = [] } = useQueryFerramentasSolicitadasGetItems()
 
-  const { mutate: handleDelete } =
-    useMutationFerramentasSolicitadasDeleteFerramentaSolicitada({
-      onSuccess: () => {
-        queryClient.refetchQueries(
-          "FerramentasSolicitadasGetFerramentasSolicitadas"
-        )
-        toast({
-          title: "Solicitação deletada com sucesso.",
-          status: "success",
-        })
-      },
-    })
+  const { mutate: handleDelete } = useMutationFerramentasSolicitadasDeleteItem({
+    onSuccess: () => {
+      queryClient.refetchQueries("FerramentasSolicitadasGetItems")
+      toast({
+        title: "Solicitação deletada com sucesso.",
+        status: "success",
+      })
+    },
+  })
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -89,9 +92,15 @@ const FerramentasSolicitadasListComp = () => {
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
       <Flex mb="8" justify="space-between" align="center">
-        <Heading size="lg" fontWeight="normal">
-          Ferramentas solicitadas
-        </Heading>
+        <Flex align="center">
+          <Icon as={RiToolsLine} fontSize="2xl" />
+          <Center mx={4} height="30px">
+            <Divider orientation="vertical" />
+          </Center>
+          <Heading size="lg" fontWeight="normal">
+            Ferramentas solicitadas
+          </Heading>
+        </Flex>
 
         <Button
           as="a"
