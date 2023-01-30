@@ -30,7 +30,7 @@ export const HeaderActions = () => {
   return (
     <HStack
       spacing={["2", "4"]}
-      mx={["6", "8"]}
+      ml={["6", "8"]}
       pr={["6", "8"]}
       py="1"
       color="gray.500"
@@ -76,7 +76,7 @@ const ModalSignOut = ({
       onClose={onClose}
       header="Deseja sair do sistema?"
       children="Ao sair você precisará logar novamente no sistema na próxima vez que for
-      utiliza-lá."
+        utiliza-lo."
       footer={[
         <Button variant="ghost" onClick={() => onClose()}>
           Cancelar

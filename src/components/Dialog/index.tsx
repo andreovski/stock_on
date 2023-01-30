@@ -10,14 +10,16 @@ import {
   ModalHeader,
   ModalOverlay,
   UseDisclosureProps,
+  ModalProps,
 } from "@chakra-ui/react"
 
-type DialogType = UseDisclosureProps & {
-  header: string | React.ReactNode
-  children: string | React.ReactNode
-  footer: React.ReactNode
-  footerProps?: Component<typeof ModalFooter>
-}
+type DialogType = UseDisclosureProps &
+  ModalProps & {
+    header?: string | React.ReactNode
+    children: string | React.ReactNode
+    footer?: React.ReactNode
+    footerProps?: Component<typeof ModalFooter>
+  }
 
 export const Dialog = ({
   isOpen,
@@ -26,19 +28,22 @@ export const Dialog = ({
   children,
   footer,
   footerProps,
+  ...props
 }: DialogType) => {
   return (
-    <Modal isOpen={isOpen!} onClose={onClose!}>
+    <Modal isOpen={isOpen!} onClose={onClose!} {...props}>
       <ModalOverlay>
         <ModalContent>
-          <ModalHeader>{header}</ModalHeader>
+          {header && <ModalHeader>{header}</ModalHeader>}
           <ModalCloseButton />
 
           <ModalBody>{children}</ModalBody>
 
-          <ModalFooter gap={2} {...footerProps}>
-            {footer}
-          </ModalFooter>
+          {footer && (
+            <ModalFooter gap={2} {...footerProps}>
+              {footer}
+            </ModalFooter>
+          )}
         </ModalContent>
       </ModalOverlay>
     </Modal>
