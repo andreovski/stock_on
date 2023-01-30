@@ -1,7 +1,26 @@
-import { HStack, IconButton } from "@chakra-ui/react"
+import {
+  Button,
+  HStack,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+  UseDisclosureProps,
+} from "@chakra-ui/react"
 import styled from "@emotion/styled"
 import { RiLogoutBoxRLine, RiUserAddLine } from "react-icons/ri"
 import { useAuth } from "../../context/AuthContext"
+import { Dialog } from "../../components/Dialog"
+
+type DialogSignOutType = UseDisclosureProps & {
+  handleSignOut: () => void
+}
 
 const IconLogOutStyled = styled(RiLogoutBoxRLine)`
   margin-inline: auto;
@@ -11,8 +30,10 @@ const IconNotificationStyled = styled(RiUserAddLine)`
   margin-inline: auto;
 `
 
-export const HeaderNotification = () => {
+export const HeaderActions = () => {
   const { handleSignOut } = useAuth()
+
+  const modalSignOut = useDisclosure()
 
   return (
     <HStack
@@ -44,8 +65,34 @@ export const HeaderNotification = () => {
         variant="unstyled"
         icon={<IconLogOutStyled />}
         fontSize="20"
-        onClick={handleSignOut}
+        onClick={() => modalSignOut.onOpen()}
       />
+
+      <ModalSignOut handleSignOut={handleSignOut} {...modalSignOut} />
     </HStack>
+  )
+}
+
+const ModalSignOut = ({
+  isOpen,
+  onClose,
+  handleSignOut,
+}: DialogSignOutType) => {
+  return (
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      header="Deseja sair do sistema?"
+      children="Ao sair você precisará logar novamente no sistema na próxima vez que for
+      utiliza-lá."
+      footer={[
+        <Button variant="ghost" onClick={() => onClose()}>
+          Cancelar
+        </Button>,
+        <Button colorScheme="red" onClick={() => handleSignOut()}>
+          Sair do sistema
+        </Button>,
+      ]}
+    />
   )
 }
