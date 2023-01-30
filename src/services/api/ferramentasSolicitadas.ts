@@ -10,14 +10,15 @@ import { IId } from "./interface"
 import { IFerramentasSolicitadas } from "./interface/iFerramentas"
 
 export const useQueryFerramentasSolicitadasGetItems = (
-  config?: UseQueryOptions
+  config?: UseQueryOptions,
+  selectColumns?: string
 ) =>
   useQuery(
     `FerramentasSolicitadasGetItems`,
     async () => {
       const { data, error } = await supabase
         .from<IFerramentasSolicitadas>("ferramentas_solicitadas")
-        .select("*")
+        .select(selectColumns || "*")
 
       if (error) throw error
       return data

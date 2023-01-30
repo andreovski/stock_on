@@ -1,7 +1,11 @@
-import { Box, SimpleGrid, Text } from "@chakra-ui/react"
+import { Box, Button, SimpleGrid, Text } from "@chakra-ui/react"
 
 import Charts from "react-apexcharts"
 import { theme } from "../../../styles/theme"
+
+import { onDownloadPdf } from "../../../libs/pdf"
+import { useQueryFerramentasSolicitadasGetItems } from "../../../services/api/ferramentasSolicitadas"
+import { useMemo } from "react"
 
 const series = [{ name: "series1", data: [3, 120, 10, 28, 51, 109] }]
 const options = {
@@ -44,20 +48,30 @@ const options = {
 }
 
 function Dashboard() {
+  //TODO: Impressão de relatórios
+  // let { data: items } = useQueryFerramentasSolicitadasGetItems(
+  //   {},
+  //   "number, worker, tools, date"
+  // )
+  // const data = useMemo(() => {
+  //   let body = Object.values(items)
+
+  //   const header = [
+  //     "Numero da solicitação",
+  //     "Funcionário",
+  //     "Ferramentas",
+  //     "Data",
+  //   ]
+
+  //   return { header, body }
+  // }, [items])
+
+  // const { handleDownload } = onDownloadPdf(data)
+
   return (
-    <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start">
-      <Box p={["6", "8"]} bg="background.50" borderRadius={8} pb="4">
-        <Text fontSize="lg" mb="4">
-          Saída de produtos
-        </Text>
-        <Charts options={options} series={series} type="area" height={160} />
-      </Box>
-      <Box p={["6", "8"]} bg="background.50" borderRadius={8} pb="4">
-        <Text fontSize="lg" mb="4">
-          Entrada de produtos
-        </Text>
-        <Charts options={options} series={series} type="area" height={160} />
-      </Box>
+    <SimpleGrid flex="1" alignItems="center" justifyContent="center">
+      {/* <Button onClick={handleDownload}>Baixar</Button> */}
+      <Text>Home</Text>
     </SimpleGrid>
   )
 }
