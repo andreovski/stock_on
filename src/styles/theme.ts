@@ -25,6 +25,7 @@ export const theme = extendTheme(
         body: {
           bg: "gray.100",
           color: "gray.800",
+          "overflow-y": "overlay",
         },
       },
     },

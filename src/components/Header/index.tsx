@@ -17,6 +17,7 @@ export function Header() {
       width="100%"
       maxWidth={1480}
       height="20"
+      minH="20"
       mx="auto"
       mt="4"
       px="4"
