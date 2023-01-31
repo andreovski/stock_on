@@ -17,7 +17,7 @@ export const queryFerramentasSolicitadasGetItems = async ({
 
   const { data, count, error } = await supabase
     .from<IFerramentasSolicitadas>("ferramentas_solicitadas")
-    .select("*", { count: "exact" })
+    .select("*, worker(*)", { count: "exact" })
     .range(min, max)
 
   if (error) throw error
@@ -51,7 +51,7 @@ export const useQueryFerramentasSolicitadasGetItemById = (
     async () => {
       const { data, error } = await supabase
         .from<IFerramentasSolicitadas>("ferramentas_solicitadas")
-        .select("*")
+        .select("*, worker(*)")
         .eq("id", id)
         .single()
 

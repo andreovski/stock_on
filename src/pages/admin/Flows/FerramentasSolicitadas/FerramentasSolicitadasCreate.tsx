@@ -55,7 +55,7 @@ export function FerramentasSolicitadasCreate() {
 
   const onSubmit = useCallback(
     (values, formik) => {
-      const worker = values.worker.value
+      const worker = values.worker.value.id
       const tools = values.tools.map((tool) => tool.value)
 
       mutate(
