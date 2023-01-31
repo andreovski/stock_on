@@ -25,17 +25,21 @@ import {
   RiPencilFill,
 } from "react-icons/ri"
 
-import { Pagination } from "../../../../components/Pagination"
 import { useNavigate } from "react-router-dom"
 import { memo, Suspense } from "react"
 import {
+  queryWokersGetWorkers,
   useMutationWorkersDeleteWorker,
-  useQueryWorkersGetWorkers,
 } from "../../../../services/api/workers"
 import { IWorkers } from "../../../../services/api/interface/iWorkers"
 import { SpinnerFull } from "../../../../components/SpinnerFull"
 import { DeleteDialog } from "../../../../utils/deleteDialog"
 import { useQueryClient } from "react-query"
+import {
+  useInfiniteQuery,
+  IUseInfinityHook,
+} from "../../../../utils/hooks/useInfiniteQuery"
+import { FiChevronsDown } from "react-icons/fi"
 
 type StockListRowProps = {
   item: IWorkers
@@ -61,6 +65,11 @@ const WorkersListComp = () => {
     lg: true,
   })
 
+  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: "workersGetWorkers",
+    queryFn: queryWokersGetWorkers,
+  }) as IUseInfinityHook<IWorkers[]>
+
   const { mutate: handleDelete } = useMutationWorkersDeleteWorker({
     onSuccess: () => {
       queryClient.refetchQueries("StockGetItems")
@@ -82,8 +91,6 @@ const WorkersListComp = () => {
   const handleDeleteItem = (item: IWorkers) => {
     handleDelete({ id: item.id })
   }
-
-  const { data } = useQueryWorkersGetWorkers()
 
   return (
     <Box flex={1} borderRadius={8} bg="background.50" p="8">
@@ -137,7 +144,17 @@ const WorkersListComp = () => {
         </Tbody>
       </Table>
 
-      <Pagination />
+      {hasNextPage && (
+        <Button
+          w="100%"
+          mt={4}
+          variant="ghost"
+          leftIcon={<Icon as={FiChevronsDown} />}
+          onClick={() => fetchNextPage()}
+        >
+          Carregar outros itens
+        </Button>
+      )}
     </Box>
   )
 }

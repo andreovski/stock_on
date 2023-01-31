@@ -27,19 +27,22 @@ import {
   RiToolsLine,
 } from "react-icons/ri"
 
-import { Pagination } from "../../../../components/Pagination"
 import { useNavigate } from "react-router-dom"
 import { Suspense } from "react"
 import {
+  queryFerramentasSolicitadasGetItems,
   useMutationFerramentasSolicitadasDeleteItem,
-  useQueryFerramentasSolicitadasGetItems,
 } from "../../../../services/api/ferramentasSolicitadas"
 import { SpinnerFull } from "../../../../components/SpinnerFull"
 import { format } from "date-fns"
-import { FiChevronsUp } from "react-icons/fi"
+import { FiChevronsDown, FiChevronsUp } from "react-icons/fi"
 import { DeleteDialog } from "../../../../utils/deleteDialog"
 import { useQueryClient } from "react-query"
 import { IFerramentasSolicitadas } from "../../../../services/api/interface/iFerramentas"
+import {
+  IUseInfinityHook,
+  useInfiniteQuery,
+} from "../../../../utils/hooks/useInfiniteQuery"
 
 type FerramentasSolicitadasListRowProps = {
   item: IFerramentasSolicitadas
@@ -60,7 +63,10 @@ const FerramentasSolicitadasListComp = () => {
   const toast = useToast()
   const queryClient = useQueryClient()
 
-  const { data = [] } = useQueryFerramentasSolicitadasGetItems()
+  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: "FerramentasSolicitadasGetItems",
+    queryFn: queryFerramentasSolicitadasGetItems,
+  }) as IUseInfinityHook<IFerramentasSolicitadas[]>
 
   const { mutate: handleDelete } = useMutationFerramentasSolicitadasDeleteItem({
     onSuccess: () => {
@@ -141,7 +147,17 @@ const FerramentasSolicitadasListComp = () => {
         </Tbody>
       </Table>
 
-      <Pagination />
+      {hasNextPage && (
+        <Button
+          w="100%"
+          mt={4}
+          variant="ghost"
+          leftIcon={<Icon as={FiChevronsDown} />}
+          onClick={() => fetchNextPage()}
+        >
+          Carregar outros itens
+        </Button>
+      )}
     </Box>
   )
 }

@@ -54,8 +54,6 @@ export const HeaderAvatar = ({ showProfileData }: HeaderAvatarProps) => {
 const ProfileModal = ({ isOpen, onClose }: UseDisclosureProps) => {
   const { eu } = useAuth()
 
-  console.log(eu)
-
   return (
     <Dialog isCentered isOpen={isOpen} onClose={onClose}>
       <Box display="flex" my={2} gap={3} alignItems="center">
