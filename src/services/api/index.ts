@@ -10,6 +10,7 @@ import { signIn } from "../../providers/auth"
 import { supabase } from "../supabaseClient"
 import { IId, IUserById } from "./interface"
 import { IStock, IStockGetItemById } from "./interface/iStock"
+import { validateRange } from "./utils"
 
 export const useMutationAuthSignInWithCredentials = (
   config?: MutateOptions<any, any>
@@ -71,6 +72,19 @@ export const useQueryUserGetUserById = (
     },
     { ...config }
   )
+
+export const queryStockGetItems = async ({ pageParam = 0 }) => {
+  const [min, max] = validateRange(pageParam)
+
+  const { data, count, error } = await supabase
+    .from<IStock>("stock")
+    .select("*", { count: "exact" })
+    .range(min, max)
+
+  if (error) throw error
+
+  return { data, count }
+}
 
 export const useQueryStockGetItems = (config?: UseQueryOptions) =>
   useQuery(

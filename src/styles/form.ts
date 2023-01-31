@@ -2,9 +2,10 @@ import { formAnatomy } from "@chakra-ui/anatomy"
 import { theme } from "@chakra-ui/react"
 
 const activeLabelStyles = {
-  transform: "scale(0.85) translateY(-12px) translateX(-6px)",
+  transform: "scale(0.85) translateY(-8px) translateX(-6px)",
   fontSize: "12px",
   color: theme.colors.gray[400],
+  fontWeight: 600,
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -35,7 +36,7 @@ export default {
           pointerEvents: "none",
           mx: 3,
           px: 1,
-          my: 2,
+          my: 0.5,
           transformOrigin: "left top",
         },
       },

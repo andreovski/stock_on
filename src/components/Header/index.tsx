@@ -3,7 +3,7 @@ import { RiMenuLine } from "react-icons/ri"
 import { useSidebarDrawer } from "../../context/SidebarContext"
 
 import { HeaderAvatar } from "./HeaderAvatar"
-import { HeaderNotification } from "./HeaderNotification"
+import { HeaderActions } from "./HeaderNotification"
 import { HeaderLogo } from "./HeaderLogo"
 
 export function Header() {
@@ -16,8 +16,8 @@ export function Header() {
       as="header"
       width="100%"
       maxWidth={1480}
-      height="20"
-      minH="20"
+      height="60px"
+      minH="60px"
       mx="auto"
       mt="4"
       px="4"
@@ -38,7 +38,7 @@ export function Header() {
       <HeaderLogo />
 
       <Flex align="center" ml="auto">
-        <HeaderNotification />
+        <HeaderActions />
         <HeaderAvatar showProfileData={isWideVersion} />
       </Flex>
     </Flex>

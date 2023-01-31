@@ -55,7 +55,7 @@ export function InputForm({
       ...props,
       placeholder,
     }),
-    [field, isValid, name, props, setFieldValue, title, type]
+    [field, isValid, name, placeholder, props, setFieldValue, title, type]
   )
 
   const Component = useMemo(() => {
@@ -78,7 +78,7 @@ export function InputForm({
       isInvalid={(!!error && !!wasTouched) || (submitCount > 0 && !!error)}
     >
       {Component}
-      <FormErrorMessage>{error}</FormErrorMessage>
+      <FormErrorMessage fontSize="sm">{error}</FormErrorMessage>
     </FormControl>
   )
 }

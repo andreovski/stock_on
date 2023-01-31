@@ -8,6 +8,20 @@ import {
 import { supabase } from "../supabaseClient"
 import { IId } from "./interface"
 import { IWorkers } from "./interface/iWorkers"
+import { validateRange } from "./utils"
+
+export const queryWokersGetWorkers = async ({ pageParam = 0 }) => {
+  const [min, max] = validateRange(pageParam)
+
+  const { data, count, error } = await supabase
+    .from<IWorkers>("workers")
+    .select("*", { count: "exact" })
+    .range(min, max)
+
+  if (error) throw error
+
+  return { data, count }
+}
 
 export const useQueryWorkersGetWorkers = (config?: UseQueryOptions) =>
   useQuery(

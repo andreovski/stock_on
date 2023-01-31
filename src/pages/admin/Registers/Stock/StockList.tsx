@@ -25,17 +25,21 @@ import {
   RiPencilFill,
 } from "react-icons/ri"
 
-import { Pagination } from "../../../../components/Pagination"
 import { useNavigate } from "react-router-dom"
 import { Suspense } from "react"
 import {
+  queryStockGetItems,
   useMutationStockDeleteItem,
-  useQueryStockGetItems,
 } from "../../../../services/api"
 import { SpinnerFull } from "../../../../components/SpinnerFull"
 import { IStock } from "../../../../services/api/interface/iStock"
 import { DeleteDialog } from "../../../../utils/deleteDialog"
 import { useQueryClient } from "react-query"
+import {
+  IUseInfinityHook,
+  useInfiniteQuery,
+} from "../../../../utils/hooks/useInfiniteQuery"
+import { FiChevronsDown } from "react-icons/fi"
 
 type StockListRowProps = {
   item: IStock
@@ -56,7 +60,10 @@ const StockListComp = () => {
   const queryClient = useQueryClient()
   const toast = useToast()
 
-  const { data = [] } = useQueryStockGetItems()
+  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: "StockGetItems",
+    queryFn: queryStockGetItems,
+  }) as IUseInfinityHook<IStock[]>
 
   const { mutate: handleDelete } = useMutationStockDeleteItem({
     onSuccess: () => {
@@ -137,7 +144,17 @@ const StockListComp = () => {
         </Tbody>
       </Table>
 
-      <Pagination />
+      {hasNextPage && (
+        <Button
+          w="100%"
+          mt={4}
+          variant="ghost"
+          leftIcon={<Icon as={FiChevronsDown} />}
+          onClick={() => fetchNextPage()}
+        >
+          Carregar outros itens
+        </Button>
+      )}
     </Box>
   )
 }

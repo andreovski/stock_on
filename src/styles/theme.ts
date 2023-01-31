@@ -37,7 +37,7 @@ export const theme = extendTheme(
         variants: {
           filled: {
             field: {
-              height: "3.4rem",
+              height: "3.1rem",
             },
           },
         },

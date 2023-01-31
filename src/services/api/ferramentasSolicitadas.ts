@@ -8,6 +8,22 @@ import {
 import { supabase } from "../supabaseClient"
 import { IId } from "./interface"
 import { IFerramentasSolicitadas } from "./interface/iFerramentas"
+import { validateRange } from "./utils"
+
+export const queryFerramentasSolicitadasGetItems = async ({
+  pageParam = 0,
+}) => {
+  const [min, max] = validateRange(pageParam)
+
+  const { data, count, error } = await supabase
+    .from<IFerramentasSolicitadas>("ferramentas_solicitadas")
+    .select("*", { count: "exact" })
+    .range(min, max)
+
+  if (error) throw error
+
+  return { data, count }
+}
 
 export const useQueryFerramentasSolicitadasGetItems = (
   config?: UseQueryOptions,
