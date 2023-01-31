@@ -10,7 +10,7 @@ export type IUseInfinityHook<T = any> = Omit<UseInfiniteQueryResult, "data"> & {
 
 export const useInfiniteQuery = ({ queryKey, queryFn }): IUseInfinityHook => {
   const queryData = useReactInfinityQuery({
-    queryKey: queryKey,
+    queryKey: `${queryKey}-list`,
     queryFn: queryFn,
     getNextPageParam: (page: any, pages) => {
       return pages.length * 10 < page.count ? pages.length + 1 : undefined

@@ -72,7 +72,8 @@ const WorkersListComp = () => {
 
   const { mutate: handleDelete } = useMutationWorkersDeleteWorker({
     onSuccess: () => {
-      queryClient.refetchQueries("StockGetItems")
+      queryClient.refetchQueries("workersGetWorkers")
+      queryClient.refetchQueries("workersGetWorkers-list")
       toast({
         title: "Solicitação deletada com sucesso.",
         status: "success",

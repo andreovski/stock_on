@@ -42,7 +42,8 @@ export function WorkersEditComp() {
 
   const { mutate } = useMutationWorkersEditWorker({
     onSuccess: () => {
-      queryClient.invalidateQueries(["StockGetItem"])
+      queryClient.invalidateQueries("workersGetWorkers")
+      queryClient.invalidateQueries("workersGetWorkers-list")
     },
   })
 

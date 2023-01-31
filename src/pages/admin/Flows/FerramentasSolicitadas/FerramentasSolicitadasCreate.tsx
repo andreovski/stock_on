@@ -48,7 +48,8 @@ export function FerramentasSolicitadasCreate() {
 
   const { mutate } = useMutationFerramentasSolicitadasInsertItem({
     onSuccess: () => {
-      queryClient.invalidateQueries(["FerramentasSolicitadasGetItems"])
+      queryClient.invalidateQueries("FerramentasSolicitadasGetItems")
+      queryClient.invalidateQueries("FerramentasSolicitadasGetItems-list")
     },
   })
 
