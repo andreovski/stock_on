@@ -71,6 +71,7 @@ const FerramentasSolicitadasListComp = () => {
   const { mutate: handleDelete } = useMutationFerramentasSolicitadasDeleteItem({
     onSuccess: () => {
       queryClient.refetchQueries("FerramentasSolicitadasGetItems")
+      queryClient.refetchQueries("FerramentasSolicitadasGetItems-list")
       toast({
         title: "Solicitação deletada com sucesso.",
         status: "success",

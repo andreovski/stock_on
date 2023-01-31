@@ -25,7 +25,8 @@ export function WorkersCreate() {
 
   const { mutate } = useMutationWorkersInsertWorker({
     onSuccess: () => {
-      queryClient.invalidateQueries(["StockGetItem"])
+      queryClient.invalidateQueries("workersGetWorkers")
+      queryClient.invalidateQueries("workersGetWorkers-list")
     },
   })
 

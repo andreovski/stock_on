@@ -61,13 +61,14 @@ const StockListComp = () => {
   const toast = useToast()
 
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery({
-    queryKey: "StockGetItems",
+    queryKey: "StockGetItem",
     queryFn: queryStockGetItems,
   }) as IUseInfinityHook<IStock[]>
 
   const { mutate: handleDelete } = useMutationStockDeleteItem({
     onSuccess: () => {
-      queryClient.refetchQueries("StockGetItems")
+      queryClient.refetchQueries("StockGetItem-list")
+      queryClient.refetchQueries("StockGetItem")
       toast({
         title: "Solicitação deletada com sucesso.",
         status: "success",
