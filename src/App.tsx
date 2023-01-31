@@ -1,11 +1,12 @@
 import { Suspense, useMemo } from "react"
 import { useAuth } from "./context/AuthContext"
-import AppRoutes from "./routes/AppRoutes"
-import AuthRoutes from "./routes/AuthRoutes"
 import { useReactQueryConfig } from "./services/reactQueryConfig"
 
 import { SpinnerFull } from "./components/SpinnerFull"
 import { Box } from "@chakra-ui/react"
+
+import AppRoutes from "./routes/AppRoutes"
+import AuthRoutes from "./routes/AuthRoutes"
 
 function App() {
   const { isAuthenticated, isLogging } = useAuth()
