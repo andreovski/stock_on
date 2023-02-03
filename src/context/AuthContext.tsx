@@ -1,3 +1,4 @@
+import { useToast } from "@chakra-ui/react"
 import {
   createContext,
   ReactNode,
@@ -10,13 +11,15 @@ import { useNavigate } from "react-router-dom"
 
 import { validateUser, signOut } from "../providers/auth"
 import { useQueryUserGetUserById } from "../services/api"
+import { IProfiles } from "../services/api/interface/iProfiles"
+import { supabase } from "../services/supabaseClient"
 
 interface IAuthContext {
   children: ReactNode
 }
 
 interface IAuthContextData {
-  eu: any
+  eu: IProfiles
   setUser: any
   isAuthenticated: boolean
   signInWithCredetials: (data) => void
@@ -32,6 +35,7 @@ export function AuthProvider({ children }: IAuthContext) {
   const [user, setUser] = useState<any>()
 
   const navigate = useNavigate()
+  const toast = useToast()
 
   const { data: eu } = useQueryUserGetUserById(
     { id: user?.id },
@@ -53,15 +57,45 @@ export function AuthProvider({ children }: IAuthContext) {
       .finally(() => setIsLogging(false))
   }, [])
 
-  const signInWithCredetials = useCallback((data) => {
-    setIsAuthenticated(true)
-    setUser(data)
-  }, [])
+  const validateIfUserIsVerified = async (id: number): Promise<boolean> => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("verified")
+      .eq("id", id)
+      .single()
+
+    return data?.verified
+  }
 
   const handleSignOut = useCallback(async () => {
     await signOut()
     setIsAuthenticated(false)
   }, [])
+
+  const signInWithCredetials = useCallback(
+    async (data) => {
+      const isVerified = await validateIfUserIsVerified(data.id)
+
+      if (isVerified) {
+        setIsAuthenticated(true)
+        setUser(data)
+
+        navigate("/dashboard")
+      } else {
+        handleSignOut()
+
+        toast({
+          status: "error",
+          title: "Usuário não validado pelo administrador do sistema",
+          duration: 8000,
+          isClosable: true,
+          description:
+            "Entre em contato com seu administrador para a ativação do cadastro atual.",
+        })
+      }
+    },
+    [handleSignOut, navigate, toast]
+  )
 
   return (
     <AuthContext.Provider

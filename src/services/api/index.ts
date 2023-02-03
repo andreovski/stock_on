@@ -9,6 +9,7 @@ import {
 import { signIn } from "../../providers/auth"
 import { supabase } from "../supabaseClient"
 import { IId, IUserById } from "./interface"
+import { IProfiles } from "./interface/iProfiles"
 import { IStock, IStockGetItemById } from "./interface/iStock"
 import { validateRange } from "./utils"
 
@@ -58,12 +59,12 @@ export const useMutationAuthFinishRegister = (config?: MutateOptions) =>
 export const useQueryUserGetUserById = (
   { id }: IUserById,
   config?: UseQueryOptions
-): UseQueryResult =>
+) =>
   useQuery(
     `user/${id}`,
     async () => {
       const { data, error } = await supabase
-        .from("profiles")
+        .from<IProfiles>("profiles")
         .select("*")
         .eq("id", id)
         .single()
@@ -71,7 +72,7 @@ export const useQueryUserGetUserById = (
       return data
     },
     { ...config }
-  )
+  ) as UseQueryResult<IProfiles>
 
 export const queryStockGetItems = async ({ pageParam = 0 }) => {
   const [min, max] = validateRange(pageParam)

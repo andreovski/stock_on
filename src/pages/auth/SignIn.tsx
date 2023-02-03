@@ -19,7 +19,7 @@ import { useMutationAuthSignInWithCredentials } from "../../services/api"
 import { Input } from "../../components/Form/Input"
 import { FcGoogle } from "react-icons/fc"
 import { HeaderLogo } from "../../components/Header/HeaderLogo"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 export const SignIn = () => {
   const { signInWithCredetials } = useAuth()
@@ -29,8 +29,6 @@ export const SignIn = () => {
 
   const [error, setError] = useState<any>()
 
-  const navigate = useNavigate()
-
   const { mutate: signIn, isLoading } = useMutationAuthSignInWithCredentials({
     onError: (data: any) => {
       setError(data)
@@ -38,7 +36,6 @@ export const SignIn = () => {
     onSuccess: ({ user }) => {
       signInWithCredetials(user)
       setError(null)
-      navigate("/dashboard")
     },
   })
 

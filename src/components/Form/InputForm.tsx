@@ -16,6 +16,7 @@ interface InputProps extends ChakraInputProps {
   field?: any
   form?: any
   validateFieldIndicator?: boolean
+  isDefault: boolean
 }
 
 export function InputForm({
@@ -25,6 +26,7 @@ export function InputForm({
   required = false,
   validateFieldIndicator,
   type,
+  isDefault = false,
   ...props
 }: InputProps) {
   const { name, value } = field
@@ -32,7 +34,8 @@ export function InputForm({
   const error = getIn(errors, name)
   const wasTouched = getIn(touched, name)
 
-  const placeholder = type === "select" ? title : " "
+  const placeholder =
+    type === "select" ? title : isDefault ? props.placeholder : " "
 
   const isValid = useMemo(() => {
     if (validateFieldIndicator && !error && value?.length > 3) {
@@ -50,12 +53,22 @@ export function InputForm({
       type,
       title,
       setFieldValue,
-      isDefault: false,
+      isDefault,
       ...field,
       ...props,
       placeholder,
     }),
-    [field, isValid, name, placeholder, props, setFieldValue, title, type]
+    [
+      field,
+      isDefault,
+      isValid,
+      name,
+      placeholder,
+      props,
+      setFieldValue,
+      title,
+      type,
+    ]
   )
 
   const Component = useMemo(() => {

@@ -42,13 +42,6 @@ export const theme = extendTheme(
           },
         },
       },
-      Button: {
-        baseStyle: {
-          _disabled: {
-            cursor: "default",
-          },
-        },
-      },
     },
   },
   withDefaultColorScheme({
