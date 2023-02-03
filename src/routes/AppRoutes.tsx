@@ -14,6 +14,8 @@ import { FinishRegister } from "../pages/auth/FinishRegister/FinishRegister"
 import { FerramentasSolicitadasEdit } from "../pages/admin/Flows/FerramentasSolicitadas/FerramentasSolicitadasEdit"
 import { FerramentasSolicitadasList } from "../pages/admin/Flows/FerramentasSolicitadas/FerramentasSolicitadasList"
 import { FerramentasSolicitadasCreate } from "../pages/admin/Flows/FerramentasSolicitadas/FerramentasSolicitadasCreate"
+import { UsersList } from "../pages/admin/Settings/Users/UsersList"
+import { UsersCreate } from "src/pages/admin/Settings/Users/UsersCreate"
 
 export default function AppRoutes() {
   return (
@@ -23,12 +25,15 @@ export default function AppRoutes() {
           <Route path="/finishRegister" element={<FinishRegister />} />
 
           <Route path="/dashboard" element={<Dashboard />} />
+
           <Route path="/workers" element={<WorkersList />} />
           <Route path="/workers/create" element={<WorkersCreate />} />
           <Route path="/workers/edit/:id" element={<WorkersEdit />} />
+
           <Route path="/stock" element={<StockList />} />
           <Route path="/stock/create" element={<StockCreate />} />
           <Route path="/stock/edit/:id" element={<StockEdit />} />
+
           <Route
             path="/ferramentas-solicitadas"
             element={<FerramentasSolicitadasList />}
@@ -41,6 +46,10 @@ export default function AppRoutes() {
             path="/ferramentas-solicitadas/edit/:id"
             element={<FerramentasSolicitadasEdit />}
           />
+
+          <Route path="/usuarios" element={<UsersList />} />
+          <Route path="/usuarios/novo" element={<UsersCreate />} />
+
           <Route path="/*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </AdminLayout>

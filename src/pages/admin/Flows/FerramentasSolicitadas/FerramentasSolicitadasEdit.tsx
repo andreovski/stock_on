@@ -15,7 +15,7 @@ import { useMemo } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { InputForm } from "../../../../components/Form/InputForm"
 import { SectionTitle } from "../../../../components/SectionTitle"
-import { Field, Form, Formik } from "formik"
+import { Field, Form, Formik, FormikHelpers } from "formik"
 import { useQueryClient } from "react-query"
 import { SpinnerFull } from "../../../../components/SpinnerFull"
 import {
@@ -61,16 +61,14 @@ export function FerramentasSolicitadasEditComp() {
   })
 
   const onSubmit = useCallback(
-    (values, formik) => {
-      const worker = values.worker.value
+    (values, formik: FormikHelpers<any>) => {
+      const worker = values.worker.value.id
       const tools = values.tools.map((tool) => tool.value)
 
       mutate(
         { ...values, worker, tools },
         {
           onSuccess: () => {
-            formik.resetForm({})
-
             toast({
               title: "Ferramenta cadastrada com sucesso.",
               status: "success",

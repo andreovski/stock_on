@@ -5,7 +5,8 @@ import { theme } from "../../../styles/theme"
 
 import { onDownloadPdf } from "../../../libs/pdf"
 import { useQueryFerramentasSolicitadasGetItems } from "../../../services/api/ferramentasSolicitadas"
-import { useMemo } from "react"
+import { useCallback, useEffect, useMemo } from "react"
+import { supabase } from "../../../services/supabaseClient"
 
 const series = [{ name: "series1", data: [3, 120, 10, 28, 51, 109] }]
 const options = {

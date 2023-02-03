@@ -12,6 +12,7 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react"
 
 import { HeaderLogo } from "../../components/Header/HeaderLogo"
@@ -27,10 +28,22 @@ import { useMutationAuthSignUpWithCredentials } from "../../services/api"
 
 export const SignUp: React.FC = () => {
   const navigate = useNavigate()
+  const toast = useToast()
 
   const invalidPassword = "A senha não atende as exigências!"
 
-  const { mutate: createAccount } = useMutationAuthSignUpWithCredentials()
+  const { mutate: createAccount } = useMutationAuthSignUpWithCredentials({
+    onError: (data: any) => {
+      if (data?.message === "User already registered") {
+        toast({
+          status: "error",
+          title: "Já existe um usuário com este e-mail",
+        })
+      } else {
+        toast({ status: "error", title: data?.message })
+      }
+    },
+  })
 
   const validationSchema = useMemo(() => {
     return Yup.object({

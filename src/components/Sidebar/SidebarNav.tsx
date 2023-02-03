@@ -3,13 +3,17 @@ import {
   RiArchiveLine,
   RiContactsLine,
   RiDashboardLine,
+  RiGroupLine,
   RiToolsLine,
 } from "react-icons/ri"
 
 import { SidebarNavSection } from "./SidebarNavSection"
 import { SidebarNavLink } from "./SidebarNavLink"
+import { useAuth } from "../../context/AuthContext"
 
 export function SidebarNav() {
+  const { eu } = useAuth()
+
   return (
     <Stack spacing="12" align="flex-start">
       <SidebarNavSection title="GERAL">
@@ -40,6 +44,16 @@ export function SidebarNav() {
           </Text>
         </SidebarNavLink>
       </SidebarNavSection>
+
+      {eu.isAdmin && (
+        <SidebarNavSection title="CONFIGURAÇÕES">
+          <SidebarNavLink link="usuarios" icon={RiGroupLine}>
+            <Text ml="4" fontWeight="medium">
+              Usuários
+            </Text>
+          </SidebarNavLink>
+        </SidebarNavSection>
+      )}
     </Stack>
   )
 }
